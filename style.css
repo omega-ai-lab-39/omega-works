@@ -555,3 +555,8 @@ a.mv-card .cap b::after{width:20px;height:20px;font-size:12px}
 .mv-voice{margin:0 0 10px!important}
 .mv-voice .q{display:block;font-weight:700;color:var(--ink);line-height:1.9}
 .mv-text p .ph{display:inline-block}
+/* できること：アイコンの横に見出し */
+.biz a{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;row-gap:8px;align-items:center;align-content:start}
+.biz a .ic{margin-bottom:0;width:46px;height:46px;font-size:23px}
+.biz a p,.biz a .more{grid-column:1 / -1}
+.biz a .more{align-self:end}
