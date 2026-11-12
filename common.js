@@ -15,6 +15,33 @@
     a.addEventListener('click',function(e){ e.preventDefault(); goTop(true); });
   });
 
+  // スマホ：三本線のメニュー
+  var head=document.querySelector('.head'), nav=head&&head.querySelector('nav');
+  if(nav){
+    if(!nav.id) nav.id='site-nav';
+    var mb=document.createElement('button');
+    mb.type='button'; mb.className='menu-btn'; mb.setAttribute('aria-controls',nav.id); mb.setAttribute('aria-expanded','false'); mb.setAttribute('aria-label','メニューを開く');
+    mb.innerHTML='<span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="mlbl">メニュー</span>';
+    nav.parentNode.insertBefore(mb,nav);
+    var shade=document.createElement('div'); shade.className='menu-shade'; document.body.appendChild(shade);
+    function setMenu(on){
+      document.body.classList.toggle('menu-open',on);
+      mb.setAttribute('aria-expanded',on?'true':'false');
+      mb.setAttribute('aria-label',on?'メニューを閉じる':'メニューを開く');
+      mb.querySelector('.mlbl').textContent=on?'とじる':'メニュー';
+    }
+    mb.addEventListener('click',function(){ setMenu(!document.body.classList.contains('menu-open')); });
+    shade.addEventListener('click',function(){ setMenu(false); });
+    nav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setMenu(false); }); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape') setMenu(false); });
+    window.addEventListener('resize',function(){ if(window.innerWidth>900) setMenu(false); });
+  }
+  // スマホ：画面の下の「相談する」などの帯（少し下に進んだら出す）
+  var bar=document.querySelector('.sp-bar');
+  if(bar) document.body.classList.add('has-bar');
+  function onBar(){ if(bar) bar.classList.toggle('show', window.scrollY>360); }
+  window.addEventListener('scroll',onBar,{passive:true}); onBar();
+
   // 一番上へ戻るボタン
   var top=document.createElement('button');
   top.type='button'; top.className='to-top'; top.setAttribute('aria-label','ページの一番上へ戻る');
