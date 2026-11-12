@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>omega works SNS代行（個人の方へ）</title>
+<meta name="description" content="個人の方・地域で活動する方の発信のお手伝い。ただいま準備中です。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Kiwi+Maru:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=24">
+<style>
+/* ===== SNS代行ページだけの見た目 ===== */
+.prep{display:inline-flex;align-items:center;gap:8px;background:var(--yellow);color:var(--ink);font-weight:700;font-size:13.5px;border-radius:999px;padding:5px 16px;margin:18px 0 0}
+.choose{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:30px 0 0}
+.choose a{display:flex;gap:16px;align-items:center;background:#fff;border-radius:24px;padding:22px 24px;text-decoration:none;color:var(--ink);box-shadow:0 10px 24px rgba(42,38,34,.06);transition:.2s;border:2px solid transparent}
+.choose a:hover{border-color:var(--orange-lite);transform:translateY(-3px)}
+.choose .ic{width:56px;height:56px;border-radius:50% 44% 52% 46%;background:var(--orange-soft);display:flex;align-items:center;justify-content:center;font-size:28px;flex:none}
+.choose a.kojin .ic{background:#E7ECF5}
+.choose h3{font-family:var(--round);font-weight:500;margin:0;font-size:18px;line-height:1.5}
+.choose p{margin:2px 0 0;font-size:13.5px;color:var(--sub);line-height:1.7}
+.choose .go{margin-left:auto;color:var(--orange);font-size:22px}
+@media (max-width:700px){.choose{grid-template-columns:minmax(0,1fr)}}
+
+.sns-sec{padding:64px 0}
+.sns-sec>.inner>h2{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.sns-sec .lead{margin:0 0 30px}
+.sub-h{font-family:var(--round);font-weight:500;font-size:20px;margin:44px 0 16px;display:flex;align-items:center;gap:10px}
+.sub-h::before{content:"";width:22px;height:3px;border-radius:2px;background:var(--orange)}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;counter-reset:st}
+.steps li{list-style:none;background:#fff;border-radius:20px;padding:20px 18px;position:relative;box-shadow:0 8px 20px rgba(42,38,34,.05)}
+.steps li::before{counter-increment:st;content:"STEP " counter(st);font-family:var(--script);font-size:22px;color:var(--orange);display:block;line-height:1.2}
+.steps b{display:block;font-family:var(--round);font-weight:500;font-size:16.5px;margin:4px 0}
+.steps span{font-size:13.5px;color:var(--sub);line-height:1.75;display:block}
+@media (max-width:860px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.steps{grid-template-columns:minmax(0,1fr)}}
+.price-box{background:var(--yellow-soft);border-radius:24px;padding:22px 26px;display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;justify-content:space-between}
+.price-box b{font-family:var(--round);font-weight:500;font-size:22px}
+.price-box p{margin:0;font-size:14px;color:var(--sub)}
+.sns-sec .worry{margin:0;max-width:none}
+.sns-sec .bene div{background:#fff;box-shadow:0 8px 20px rgba(42,38,34,.05)}
+.steps{padding:0;margin:0}
+.sns-sec .faq{margin:0;max-width:none}
+.note-box{background:#fff;border-left:5px solid #4A5C86;border-radius:14px;padding:16px 20px;font-size:14px;color:var(--sub);line-height:1.85}
+.note-box b{color:var(--ink)}
+
+/* 合言葉の鍵 */
+.kojin-sec{background:var(--card)}
+.lock{max-width:560px;margin:10px auto 0;background:#fff;border-radius:28px;padding:34px 28px;text-align:center;box-shadow:0 14px 30px rgba(42,38,34,.06)}
+.lock .big{font-size:40px;line-height:1}
+.lock h3{font-family:var(--round);font-weight:500;font-size:20px;margin:12px 0 6px}
+.lock p{margin:0;color:var(--sub);font-size:14.5px}
+.lock form{display:flex;gap:10px;margin:22px auto 0;max-width:400px}
+.lock input{flex:1;min-width:0;font:inherit;font-size:16px;border:1.5px solid var(--line);border-radius:999px;padding:11px 18px;background:var(--bg)}
+.lock input:focus{outline:none;border-color:var(--orange-lite);background:#fff}
+.lock button{font:inherit;font-weight:700;border:0;border-radius:999px;background:var(--ink);color:#fff;padding:11px 22px;cursor:pointer;white-space:nowrap}
+.lock .err{color:#C24A2A;font-size:13.5px;min-height:1.6em;margin-top:10px}
+@media (max-width:420px){.lock form{flex-direction:column}}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--sub);text-decoration:none;font-size:14px;font-weight:700;margin:0 0 6px}
+.back:hover{color:var(--orange-deep)}
+.sub-page .sns-sec{padding-top:24px}
+.sub-page .sns-sec>.inner>h2{display:none}
+.sub-page .kojin-sec{background:none;padding-top:8px}
+</style>
+</head>
+<body>
+<header class="head">
+  <div class="inner">
+    <a class="logo" href="index.html"><span class="mark"></span><span><b>omega works</b><small>暮らしと仕事の、小さなアプリ工房</small></span></a>
+    <nav class="nav">
+      <a href="jigyo.html">事業内容</a>
+      <a href="works.html">制作事例</a>
+      <a href="index.html#faq">Q＆A</a>
+      <a href="index.html#about">プロフィール</a>
+      <a class="coco" href="https://coconala.com/users/2991004" target="_blank" rel="noopener">ココナラ</a>
+      <a class="insta" href="https://www.instagram.com/omega.5319/" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ig-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" class="dot"/></svg><span>Instagram</span></a>
+      <a class="cta" href="index.html#contact">相談する</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top" class="sub-page">
+<div class="inner page-head">
+  <a class="back" href="sns.html">‹ SNS代行のトップへ</a><br>
+  <span class="script">for you</span>
+  <h2>🙋 個人の方・地域で活動する方へ</h2>
+</div>
+<!-- 個人の方・地域で活動する方（合言葉で開く） -->
+<section id="kojin" class="sns-sec kojin-sec">
+  <div class="inner">
+    <h2>🙋 個人の方・地域で活動する方へ</h2>
+    <div id="kojin-body">
+      <div class="lock">
+        <div class="big">🔒</div>
+        <h3>ただいま準備中です</h3>
+        <p>こちらのご案内は、準備ができしだい公開します。<br>合言葉をお持ちの方は、入力してください。</p>
+        <form id="lock-form" autocomplete="off">
+          <input id="lock-pw" type="password" aria-label="合言葉" placeholder="合言葉">
+          <button type="submit">ひらく</button>
+        </form>
+        <p class="err" id="lock-err" role="alert"></p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<section class="contact">
+  <div class="inner" style="text-align:center">
+    <span class="script">let's talk</span>
+    <h2>まずは、お話を聞かせてください。</h2>
+    <p class="lead" style="margin-bottom:26px">「うちでも頼めるかな？」の段階で大丈夫です。相談は無料です。</p>
+    <a class="btn btn-sub" href="index.html#contact">相談してみる</a>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="inner">
+    <div><b>omega works</b><br>暮らしと仕事の、小さなアプリ工房</div>
+    <div class="links">
+      <a href="index.html">トップ</a>
+      <a href="jigyo.html">事業内容</a>
+      <a href="works.html">制作事例</a>
+      <a href="https://www.instagram.com/omega.5319/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://coconala.com/users/2991004" target="_blank" rel="noopener">ココナラ</a>
+      <a href="index.html#contact">お問い合わせ</a>
+    </div>
+  </div>
+</footer>
+<nav class="sp-bar" aria-label="ご相談の入り口">
+  <a class="b-main" href="index.html#contact"><span class="ic">💬</span>相談する</a>
+  <a href="https://coconala.com/users/2991004" target="_blank" rel="noopener"><span class="ic">🤝</span>ココナラ</a>
+  <a href="https://www.instagram.com/omega.5319/" target="_blank" rel="noopener"><svg class="ig-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" class="dot"/></svg>Instagram</a>
+</nav>
+<script>
+// 個人の方向けの中身は、合言葉で鍵をかけた暗号のまま置いてある（合言葉がないと読めない）
+var SEC={salt:"lf5zQH8DPTY0YNcBrjFIQQ==",iv:"6wsB1mVbqOc5tPTR",iter:250000,data:"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"};
+(function(){
+  var form=document.getElementById('lock-form'), pw=document.getElementById('lock-pw'), err=document.getElementById('lock-err');
+  function b64(s){ return Uint8Array.from(atob(s),function(c){return c.charCodeAt(0);}); }
+  async function open(word){
+    var enc=new TextEncoder();
+    var base=await crypto.subtle.importKey('raw',enc.encode(word),'PBKDF2',false,['deriveKey']);
+    var key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(SEC.salt),iterations:SEC.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+    var out=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(SEC.iv)},key,b64(SEC.data));
+    return new TextDecoder().decode(out);
+  }
+  form.addEventListener('submit',async function(e){
+    e.preventDefault(); err.textContent='';
+    if(!window.crypto||!crypto.subtle){ err.textContent='このブラウザでは開けません。別のブラウザでお試しください。'; return; }
+    try{ document.getElementById('kojin-body').innerHTML=await open(pw.value.trim()); }
+    catch(x){ err.textContent='合言葉がちがうようです。'; pw.select(); }
+  });
+})();
+</script>
+<script src="common.js?v=6"></script>
+</body>
+</html>

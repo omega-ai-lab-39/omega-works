@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>omega works 事業内容</title>
+<meta name="description" content="omega works の事業内容。暮らしと仕事の小さなアプリ・ホームページ制作、AI講座、SNS代行、Kindle本の表紙づくり。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Kiwi+Maru:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=24">
+<style>
+/* ===== SNS代行ページだけの見た目 ===== */
+.prep{display:inline-flex;align-items:center;gap:8px;background:var(--yellow);color:var(--ink);font-weight:700;font-size:13.5px;border-radius:999px;padding:5px 16px;margin:18px 0 0}
+.choose{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:30px 0 0}
+.choose a{display:flex;gap:16px;align-items:center;background:#fff;border-radius:24px;padding:22px 24px;text-decoration:none;color:var(--ink);box-shadow:0 10px 24px rgba(42,38,34,.06);transition:.2s;border:2px solid transparent}
+.choose a:hover{border-color:var(--orange-lite);transform:translateY(-3px)}
+.choose .ic{width:56px;height:56px;border-radius:50% 44% 52% 46%;background:var(--orange-soft);display:flex;align-items:center;justify-content:center;font-size:28px;flex:none}
+.choose a.kojin .ic{background:#E7ECF5}
+.choose h3{font-family:var(--round);font-weight:500;margin:0;font-size:18px;line-height:1.5}
+.choose p{margin:2px 0 0;font-size:13.5px;color:var(--sub);line-height:1.7}
+.choose .go{margin-left:auto;color:var(--orange);font-size:22px}
+@media (max-width:700px){.choose{grid-template-columns:minmax(0,1fr)}}
+
+.sns-sec{padding:64px 0}
+.sns-sec>.inner>h2{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.sns-sec .lead{margin:0 0 30px}
+.sub-h{font-family:var(--round);font-weight:500;font-size:20px;margin:44px 0 16px;display:flex;align-items:center;gap:10px}
+.sub-h::before{content:"";width:22px;height:3px;border-radius:2px;background:var(--orange)}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;counter-reset:st}
+.steps li{list-style:none;background:#fff;border-radius:20px;padding:20px 18px;position:relative;box-shadow:0 8px 20px rgba(42,38,34,.05)}
+.steps li::before{counter-increment:st;content:"STEP " counter(st);font-family:var(--script);font-size:22px;color:var(--orange);display:block;line-height:1.2}
+.steps b{display:block;font-family:var(--round);font-weight:500;font-size:16.5px;margin:4px 0}
+.steps span{font-size:13.5px;color:var(--sub);line-height:1.75;display:block}
+@media (max-width:860px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.steps{grid-template-columns:minmax(0,1fr)}}
+.price-box{background:var(--yellow-soft);border-radius:24px;padding:22px 26px;display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;justify-content:space-between}
+.price-box b{font-family:var(--round);font-weight:500;font-size:22px}
+.price-box p{margin:0;font-size:14px;color:var(--sub)}
+.sns-sec .worry{margin:0;max-width:none}
+.sns-sec .bene div{background:#fff;box-shadow:0 8px 20px rgba(42,38,34,.05)}
+.steps{padding:0;margin:0}
+.sns-sec .faq{margin:0;max-width:none}
+.note-box{background:#fff;border-left:5px solid #4A5C86;border-radius:14px;padding:16px 20px;font-size:14px;color:var(--sub);line-height:1.85}
+.note-box b{color:var(--ink)}
+
+/* 合言葉の鍵 */
+.kojin-sec{background:var(--card)}
+.lock{max-width:560px;margin:10px auto 0;background:#fff;border-radius:28px;padding:34px 28px;text-align:center;box-shadow:0 14px 30px rgba(42,38,34,.06)}
+.lock .big{font-size:40px;line-height:1}
+.lock h3{font-family:var(--round);font-weight:500;font-size:20px;margin:12px 0 6px}
+.lock p{margin:0;color:var(--sub);font-size:14.5px}
+.lock form{display:flex;gap:10px;margin:22px auto 0;max-width:400px}
+.lock input{flex:1;min-width:0;font:inherit;font-size:16px;border:1.5px solid var(--line);border-radius:999px;padding:11px 18px;background:var(--bg)}
+.lock input:focus{outline:none;border-color:var(--orange-lite);background:#fff}
+.lock button{font:inherit;font-weight:700;border:0;border-radius:999px;background:var(--ink);color:#fff;padding:11px 22px;cursor:pointer;white-space:nowrap}
+.lock .err{color:#C24A2A;font-size:13.5px;min-height:1.6em;margin-top:10px}
+@media (max-width:420px){.lock form{flex-direction:column}}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--sub);text-decoration:none;font-size:14px;font-weight:700;margin:0 0 6px}
+.back:hover{color:var(--orange-deep)}
+.sub-page .sns-sec{padding-top:24px}
+.sub-page .sns-sec>.inner>h2{display:none}
+.sub-page .kojin-sec{background:none;padding-top:8px}
+/* 事業内容 */
+.svc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:10px}
+.svc article{background:#fff;border-radius:26px;padding:28px 26px 24px;box-shadow:0 12px 28px rgba(42,38,34,.06);display:flex;flex-direction:column}
+.svc .top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.svc .top .pi{font-size:36px;line-height:1}
+.svc h3 .ph{display:inline-block}
+.svc h3{font-family:var(--round);font-weight:500;font-size:21px;color:var(--orange-deep);margin:0;line-height:1.4}
+.svc .soon{display:inline-block;margin-left:8px;font-family:var(--sans);font-size:10.5px;color:var(--sub);border:1px solid var(--line);border-radius:999px;padding:0 7px;vertical-align:3px}
+.svc .for{font-size:13px;color:var(--sub);margin:0 0 10px}
+.svc ul{margin:0 0 16px;padding-left:1.2em;font-size:14.5px;line-height:1.9}
+.svc .links{margin-top:auto;display:flex;flex-wrap:wrap;gap:10px}
+.svc .links a{font-size:14px;font-weight:700;text-decoration:none;border-radius:999px;padding:9px 18px}
+.svc .links a.go1{background:var(--orange);color:#fff}
+.svc .links a.go2{border:1.5px solid var(--ink);color:var(--ink)}
+.extra{margin-top:22px;background:var(--yellow-soft);border-radius:22px;padding:20px 24px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.extra b{font-family:var(--round);font-weight:500;font-size:17px}
+.extra p{margin:2px 0 0;font-size:14px;color:var(--sub)}
+.extra a{font-size:14px;font-weight:700;color:var(--orange-deep);text-decoration:none;white-space:nowrap}
+@media (max-width:900px){.svc{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header class="head">
+  <div class="inner">
+    <a class="logo" href="index.html"><span class="mark"></span><span><b>omega works</b><small>暮らしと仕事の、小さなアプリ工房</small></span></a>
+    <nav class="nav">
+      <a class="now" href="jigyo.html">事業内容</a>
+      <a href="works.html">制作事例</a>
+      <a href="index.html#faq">Q＆A</a>
+      <a href="index.html#about">プロフィール</a>
+      <a class="coco" href="https://coconala.com/users/2991004" target="_blank" rel="noopener">ココナラ</a>
+      <a class="insta" href="https://www.instagram.com/omega.5319/" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ig-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" class="dot"/></svg><span>Instagram</span></a>
+      <a class="cta" href="index.html#contact">相談する</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="inner page-head">
+  <span class="script">what we do</span>
+  <h2>暮らしと仕事の「困った」を、<span class="pop">形に</span>します。</h2>
+  <p class="lead">つくる・教える・発信する。3つのやり方で、あなたの毎日をお手伝いします。</p>
+</div>
+<div class="inner">
+  <div class="svc">
+    <article>
+      <div class="top"><span class="pi">🛠</span><h3><span class="ph">アプリ・</span><span class="ph">ホームページ制作</span></h3></div>
+      <p class="for">職場の業務・お店・子育てに</p>
+      <ul>
+        <li>シフト表や記録などの業務アプリ</li>
+        <li>お店や施設のホームページ</li>
+        <li>子どもが自分から使える家庭のアプリ</li>
+      </ul>
+      <div class="links"><a class="go1" href="index.html#contact">相談する</a><a class="go2" href="works.html">制作事例を見る</a></div>
+    </article>
+    <article>
+      <div class="top"><span class="pi">🎓</span><h3>AI講座<span class="soon">準備中</span></h3></div>
+      <p class="for">自分で作れるようになりたい方に</p>
+      <ul>
+        <li>ビデオ通話で、画面を見ながら一緒に</li>
+        <li>プログラミングは書かず、AIへの頼み方を覚える</li>
+        <li>作ったあとも、自分で直せる</li>
+      </ul>
+      <div class="links"><a class="go1" href="index.html#contact">相談する</a><a class="go2" href="index.html#course">くわしく見る</a></div>
+    </article>
+    <article>
+      <div class="top"><span class="pi">📱</span><h3>SNS代行<span class="soon">準備中</span></h3></div>
+      <p class="for">お店・会社・地域で活動する方に</p>
+      <ul>
+        <li>投稿の文章づくり</li>
+        <li>見やすい画像づくり</li>
+        <li>投稿の予定と予約、毎月のふりかえり</li>
+      </ul>
+      <div class="links"><a class="go1" href="index.html#contact">相談する</a><a class="go2" href="sns.html">くわしく見る</a></div>
+    </article>
+  </div>
+  <div class="extra">
+    <div><b>📕 Kindle本の表紙づくり・動画</b><p>表紙づくりはココナラで受付中です。</p></div>
+    <a href="https://coconala.com/services/4231525" target="_blank" rel="noopener">ココナラで見る →</a>
+  </div>
+</div>
+<div style="height:64px"></div>
+</main>
+
+<section class="contact">
+  <div class="inner" style="text-align:center">
+    <span class="script">let's talk</span>
+    <h2>まずは、お話を聞かせてください。</h2>
+    <p class="lead" style="margin-bottom:26px">「うちでも頼めるかな？」の段階で大丈夫です。相談は無料です。</p>
+    <a class="btn btn-sub" href="index.html#contact">相談してみる</a>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="inner">
+    <div><b>omega works</b><br>暮らしと仕事の、小さなアプリ工房</div>
+    <div class="links">
+      <a href="index.html">トップ</a>
+      <a href="jigyo.html">事業内容</a>
+      <a href="works.html">制作事例</a>
+      <a href="https://www.instagram.com/omega.5319/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://coconala.com/users/2991004" target="_blank" rel="noopener">ココナラ</a>
+      <a href="index.html#contact">お問い合わせ</a>
+    </div>
+  </div>
+</footer>
+<nav class="sp-bar" aria-label="ご相談の入り口">
+  <a class="b-main" href="index.html#contact"><span class="ic">💬</span>相談する</a>
+  <a href="https://coconala.com/users/2991004" target="_blank" rel="noopener"><span class="ic">🤝</span>ココナラ</a>
+  <a href="https://www.instagram.com/omega.5319/" target="_blank" rel="noopener"><svg class="ig-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" class="dot"/></svg>Instagram</a>
+</nav>
+<script src="common.js?v=6"></script>
+</body>
+</html>
