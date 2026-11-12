@@ -41,6 +41,8 @@
       var t=document.getElementById(h.slice(1)); if(!t) return;
       e.preventDefault();
       setTimeout(function(){ t.scrollIntoView({behavior:'smooth',block:'start'}); if(history.pushState) history.pushState(null,'',h); },30);
+      // 動かなかったときの予備：その場所へ直接とぶ
+      setTimeout(function(){ if(Math.abs(t.getBoundingClientRect().top)>120) t.scrollIntoView({behavior:'instant',block:'start'}); },1200);
     }); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') setMenu(false); });
     window.addEventListener('resize',function(){ if(window.innerWidth>900) setMenu(false); });
