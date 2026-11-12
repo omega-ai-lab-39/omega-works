@@ -524,3 +524,9 @@ a.mv-card .cap b::after{width:20px;height:20px;font-size:12px}
 .worry li .ph{display:inline-block}
 @media (max-width:700px){.worry li{font-size:14.5px;letter-spacing:.02em;padding:14px 16px 14px 50px}.worry li::before{left:16px}}
 .worry-end .ph{display:inline-block}
+/* プロフィールの下：Instagramとココナラ */
+.ig-link .ig-lead{margin:0 0 12px;font-size:14.5px;color:var(--sub)}
+.ig-link .ig-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.ig-link .ig-btns a{padding:11px 22px;font-weight:700;gap:8px}
+.ig-link .cc{font-size:20px;line-height:1}
+.ig-lead .ph{display:inline-block}
