@@ -465,3 +465,7 @@ form.form{max-width:700px;margin:0 auto;background:var(--card);color:var(--ink);
 .pen b{color:var(--orange-deep);font-family:var(--round);font-weight:500;font-size:17px}
 .sp-br{display:none}
 @media (max-width:560px){.pen{font-size:14px;padding:14px 16px;align-items:flex-start}.sp-br{display:inline}}
+
+/* できること：MVのすぐ下に見えるよう上の余白をつめる */
+#business{padding-top:36px}
+@media (max-width:560px){#business{padding-top:28px}}
