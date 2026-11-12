@@ -530,3 +530,5 @@ a.mv-card .cap b::after{width:20px;height:20px;font-size:12px}
 .ig-link .ig-btns a{padding:11px 22px;font-weight:700;gap:8px}
 .ig-link .cc{font-size:20px;line-height:1}
 .ig-lead .ph{display:inline-block}
+/* 講座：準備中の表示 */
+.course-prep{display:inline-block;margin:16px 0 0;background:#fff;border:1.5px solid var(--orange-lite);color:var(--orange-deep);font-weight:700;font-size:14px;border-radius:999px;padding:5px 18px}
