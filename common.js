@@ -32,7 +32,16 @@
     }
     mb.addEventListener('click',function(){ setMenu(!document.body.classList.contains('menu-open')); });
     shade.addEventListener('click',function(){ setMenu(false); });
-    nav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setMenu(false); }); });
+    // メニューの中の「#〇〇」は、メニューを閉じてから その場所へ動かす（開いている間は画面が止まっているため）
+    nav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(e){
+      var open=document.body.classList.contains('menu-open'); setMenu(false);
+      var h=a.getAttribute('href')||'';
+      if(!open || h.charAt(0)!=='#') return;
+      if(h==='#top'){ setTimeout(function(){ goTop(true); },30); return; }
+      var t=document.getElementById(h.slice(1)); if(!t) return;
+      e.preventDefault();
+      setTimeout(function(){ t.scrollIntoView({behavior:'smooth',block:'start'}); if(history.pushState) history.pushState(null,'',h); },30);
+    }); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') setMenu(false); });
     window.addEventListener('resize',function(){ if(window.innerWidth>900) setMenu(false); });
   }
