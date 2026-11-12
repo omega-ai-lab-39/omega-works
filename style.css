@@ -541,3 +541,13 @@ a.mv-card .cap b::after{width:20px;height:20px;font-size:12px}
   .mv-card.c3{left:auto;right:6%;top:30%;bottom:auto;transform:rotate(3deg)}
 }
 @media (min-width:561px) and (max-width:900px){.mv-art{min-height:520px}.mv-card.c1{width:52%}.mv-card.c2{width:50%}.mv-card.c3{width:30%;top:18%}}
+/* 一番上の写真：重ねて、かたむけて、動きを出す（rotate は浮かぶ動きとは別にかかる） */
+@media (min-width:901px){
+  .mv-card.c1{left:0;top:2%;width:56%;rotate:-4deg;z-index:1}
+  .mv-card.c2{left:14%;bottom:-2%;width:52%;rotate:3deg;z-index:2}
+  .mv-card.c3{right:-2%;top:14%;width:clamp(150px,29%,176px);rotate:7deg;z-index:3}
+}
+@media (min-width:561px) and (max-width:900px){
+  .mv-card.c1{rotate:-3deg}.mv-card.c2{left:10%;rotate:3deg;z-index:2}.mv-card.c3{right:2%;rotate:6deg;z-index:3}
+}
+@media (max-width:560px){.mv-card.c1{rotate:-3deg}.mv-card.c2{rotate:4deg}}
