@@ -3,10 +3,11 @@
   // ページを開いたら一番上から（#付きのときはその場所へ）
   if('scrollRestoration' in history) history.scrollRestoration='manual';
   // （埋め込み表示のときは外側の画面ごと一番上へ動かすため scrollIntoView も使う）
-  var head=document.querySelector('header')||document.body;
+  var inFrame=false; try{ inFrame=window.self!==window.top; }catch(e){ inFrame=true; }
   function goTop(smooth){
-    window.scrollTo({top:0,behavior:smooth?'smooth':'auto'});
-    try{ head.scrollIntoView({block:'start',behavior:smooth?'smooth':'auto'}); }catch(e){}
+    var b=smooth?'smooth':'auto';
+    if(inFrame){ try{ document.documentElement.scrollIntoView({block:'start',behavior:b}); return; }catch(e){} }
+    window.scrollTo({top:0,behavior:b});
   }
   window.addEventListener('load',function(){ if(!location.hash) goTop(false); });
   // 同じページの「#top」へのリンクも一番上へ
