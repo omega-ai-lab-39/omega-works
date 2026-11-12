@@ -480,3 +480,6 @@ a.mv-card{display:block;color:var(--ink);text-decoration:none;cursor:pointer;tra
 a.mv-card:hover{box-shadow:0 0 0 3px var(--orange-lite),0 22px 44px rgba(42,38,34,.22);z-index:5}
 a.mv-card:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
 a.mv-card .cap b::after{content:" ›"}
+/* 押せる印：見やすい丸い矢印に */
+a.mv-card .cap b::after{content:"→";display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:var(--orange);color:#fff;font-size:10px;font-weight:700;margin-left:5px;vertical-align:1px;line-height:1}
+@media (max-width:560px){a.mv-card .cap b::after{width:15px;height:15px;font-size:9px;margin-left:3px}}
