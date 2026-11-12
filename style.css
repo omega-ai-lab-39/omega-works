@@ -472,3 +472,6 @@ form.form{max-width:700px;margin:0 auto;background:var(--card);color:var(--ink);
 /* 写真カードの説明：太字のところは途中で切らない */
 .mv-card .cap b{display:inline-block;white-space:nowrap}
 @media (max-width:380px){.mv-card .cap em{letter-spacing:0;font-size:9.5px}}
+/* 絵本のカード：説明が1行ずつに収まる幅に */
+.mv-card.c3{width:clamp(146px,27%,170px)}
+.mv-card.c3 .cap em,.mv-card.c3 .cap b{white-space:nowrap}
