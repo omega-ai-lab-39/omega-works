@@ -475,3 +475,8 @@ form.form{max-width:700px;margin:0 auto;background:var(--card);color:var(--ink);
 /* 絵本のカード：説明が1行ずつに収まる幅に */
 .mv-card.c3{width:clamp(146px,27%,170px)}
 .mv-card.c3 .cap em,.mv-card.c3 .cap b{white-space:nowrap}
+/* 写真カードを押すと作品ページへ */
+a.mv-card{display:block;color:var(--ink);text-decoration:none;cursor:pointer;transition:box-shadow .25s}
+a.mv-card:hover{box-shadow:0 0 0 3px var(--orange-lite),0 22px 44px rgba(42,38,34,.22);z-index:5}
+a.mv-card:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+a.mv-card .cap b::after{content:" ›"}
