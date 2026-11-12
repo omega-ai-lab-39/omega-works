@@ -519,3 +519,8 @@ a.mv-card .cap b::after{width:20px;height:20px;font-size:12px}
 .mv-card .cap .to{margin:0 4px}
 @media (max-width:560px){.mv-card .cap{font-size:11.5px}}
 @media (max-width:380px){.mv-card .cap{font-size:11px}.mv-card .cap em{font-size:9.5px}}
+/* お悩み：PCは1行、スマホは「、」の所でだけ折り返す */
+.worry{max-width:1000px}
+.worry li .ph{display:inline-block}
+@media (max-width:700px){.worry li{font-size:14.5px;letter-spacing:.02em;padding:14px 16px 14px 50px}.worry li::before{left:16px}}
+.worry-end .ph{display:inline-block}
