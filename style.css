@@ -483,3 +483,23 @@ a.mv-card .cap b::after{content:" ›"}
 /* 押せる印：見やすい丸い矢印に */
 a.mv-card .cap b::after{content:"→";display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:var(--orange);color:#fff;font-size:10px;font-weight:700;margin-left:5px;vertical-align:1px;line-height:1}
 @media (max-width:560px){a.mv-card .cap b::after{width:15px;height:15px;font-size:9px;margin-left:3px}}
+/* お客様の声：スタッフの顔と吹き出し */
+.voice.talk{background:none;box-shadow:none;padding:0;display:flex;align-items:flex-start;gap:22px}
+.voice.talk::before{content:none}
+.voice.talk .speaker{flex:none;width:104px;text-align:center}
+.voice.talk .face{display:block;width:96px;height:96px;margin:0 auto;border-radius:50%;box-shadow:0 0 0 5px #fff,0 10px 22px rgba(42,38,34,.1);overflow:hidden}
+.voice.talk .face svg{width:100%;height:100%;display:block}
+.voice.talk .who{text-align:center;margin:12px 0 0;font-size:13px;line-height:1.55}
+.voice.talk .bubble{position:relative;flex:1;background:#fff;border-radius:26px;padding:26px 30px;box-shadow:0 14px 34px rgba(42,38,34,.07)}
+.voice.talk .bubble::before{content:"";position:absolute;left:-14px;top:36px;border:10px solid transparent;border-right:16px solid #fff;border-left:0}
+.voice.talk .bubble p{margin:0;font-size:16.5px;line-height:1.95}
+@media (max-width:600px){
+  .voice.talk{flex-direction:column;align-items:flex-start;gap:14px}
+  .voice.talk .speaker{display:flex;align-items:center;gap:12px;width:auto;text-align:left;padding-left:6px}
+  .voice.talk .face{width:64px;height:64px;margin:0}
+  .voice.talk .who{margin:0;text-align:left}
+  .voice.talk .who br{display:none}
+  .voice.talk .bubble{padding:20px 20px}
+  .voice.talk .bubble::before{left:30px;top:-14px;border:10px solid transparent;border-bottom:16px solid #fff;border-top:0}
+  .voice.talk .bubble p{font-size:15px}
+}
