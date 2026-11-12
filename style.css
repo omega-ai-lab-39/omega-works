@@ -469,3 +469,6 @@ form.form{max-width:700px;margin:0 auto;background:var(--card);color:var(--ink);
 /* できること：MVのすぐ下に見えるよう上の余白をつめる */
 #business{padding-top:36px}
 @media (max-width:560px){#business{padding-top:28px}}
+/* 写真カードの説明：太字のところは途中で切らない */
+.mv-card .cap b{display:inline-block;white-space:nowrap}
+@media (max-width:380px){.mv-card .cap em{letter-spacing:0;font-size:9.5px}}
