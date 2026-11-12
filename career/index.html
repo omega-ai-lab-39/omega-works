@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Megumi Sakamoto ／ Portfolio</title>
+<meta name="description" content="AIで現場の業務ツールをつくる、非エンジニアのつくり手の職務ポートフォリオ。できること・経歴・作品。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F7F5; --paper:#FFFFFF; --ink:#1E2433; --sub:#5B6474; --line:#E3E6EC;
+  --navy:#1F2D4D; --navy-soft:#EEF1F7; --accent:#FF5A00; --accent-soft:#FFF0E6;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;font-size:15.5px;line-height:1.85;-webkit-font-smoothing:antialiased}
+a{color:var(--navy)}
+img{max-width:100%;display:block}
+.inner{max-width:1040px;margin:0 auto;padding:0 28px}
+@media (max-width:560px){.inner{padding:0 16px}}
+
+/* 上のメニュー */
+.head{position:sticky;top:0;z-index:20;background:var(--navy);box-shadow:0 6px 20px rgba(31,45,77,.22)}
+.head .inner{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px}
+.head .me{font-family:"Cormorant Garamond",Georgia,serif;font-size:20px;font-weight:600;color:#fff;text-decoration:none;letter-spacing:.06em;white-space:nowrap}
+.head .me small{font-family:"Noto Sans JP",sans-serif;font-size:11px;color:#C9D2E6;letter-spacing:.14em;font-weight:500;margin-left:8px}
+.head nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.head nav::-webkit-scrollbar{display:none}
+.head nav a{color:#fff;text-decoration:none;font-size:14px;font-weight:500;padding:6px 12px;border-radius:8px;white-space:nowrap}
+.head nav a:hover{background:rgba(255,255,255,.14);color:#fff}
+.print-btn{font:inherit;font-size:13px;font-weight:700;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:7px 14px;cursor:pointer;white-space:nowrap}
+@media (max-width:760px){.head .inner{flex-wrap:wrap;height:auto;padding-top:8px;padding-bottom:6px}.head nav{order:3;width:100%}}
+
+/* 表紙 */
+.cover{background:var(--paper);border-bottom:1px solid var(--line);padding:56px 0 44px}
+.cover .label{font-family:"Cormorant Garamond",Georgia,serif;font-size:15px;letter-spacing:.42em;color:var(--accent);font-weight:600;margin:0 0 14px;display:flex;align-items:center;gap:14px}
+.cover .label::after{content:"";width:60px;height:1px;background:var(--accent)}
+.cover h1{font-size:clamp(26px,4vw,38px);line-height:1.45;margin:0 0 6px;color:var(--navy)}
+.cover .name{font-size:14px;color:var(--sub);margin:14px 0 26px;display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 14px}
+.cover .name b{font-family:"Cormorant Garamond",Georgia,serif;color:var(--navy);font-size:30px;font-weight:600;letter-spacing:.06em}
+.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:0;padding:0}
+@media (max-width:760px){.summary{grid-template-columns:minmax(0,1fr)}}
+.summary li{list-style:none;background:var(--navy-soft);border-radius:12px;padding:16px 18px;font-size:14.5px}
+.summary li b{display:block;color:var(--navy);font-size:16px;margin-bottom:2px}
+
+/* 見出し */
+section{padding:56px 0}
+h2{margin:0 0 14px;color:var(--navy);display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 16px}
+h2 .no{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:20px;color:var(--accent);font-weight:500;min-width:1.6em}
+h2 .en{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(34px,5vw,46px);font-weight:600;letter-spacing:.02em;line-height:1.1}
+h2 .ja{font-size:13px;font-weight:500;color:var(--sub);letter-spacing:.18em;padding-left:14px;border-left:1px solid var(--line)}
+.en-s{display:block;font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:17px;color:var(--accent);font-weight:500;letter-spacing:.04em;line-height:1.3}
+.sec-lead{color:var(--sub);margin:0 0 26px;font-size:14.5px}
+
+/* できること */
+.skills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.skills{grid-template-columns:minmax(0,1fr)}}
+.skill{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.skill h3{margin:0 0 8px;font-size:16px}
+.skill ul{margin:0;padding-left:1.2em;font-size:14.5px}
+.skill li{margin-bottom:3px}
+
+/* 経歴（左から右へ） */
+.flow{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:34px}
+.flow li{position:relative;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;border-top:4px solid var(--navy)}
+.flow li.now{background:var(--accent-soft);border-top-color:var(--accent)}
+.flow li:not(:last-child)::after{content:"";position:absolute;right:-25px;top:50%;width:14px;height:14px;border-top:3px solid var(--navy);border-right:3px solid var(--navy);transform:translateY(-50%) rotate(45deg)}
+.flow .when{font-size:12.5px;color:var(--sub);font-weight:700;letter-spacing:.04em}
+.flow h3{margin:4px 0 0;font-size:17px;color:var(--navy)}
+.flow .role{margin:0 0 8px;font-size:13px;font-weight:700;color:var(--accent)}
+.flow p{margin:0;font-size:13.5px;color:var(--sub);line-height:1.8}
+@media (max-width:860px){
+  .flow{grid-template-columns:minmax(0,1fr);gap:34px}
+  .flow li:not(:last-child)::after{right:auto;left:50%;top:auto;bottom:-25px;transform:translateX(-50%) rotate(135deg)}
+}
+
+.timeline{margin:0;padding:0;border-left:2px solid var(--line);margin-left:8px}
+.timeline li{list-style:none;position:relative;padding:0 0 22px 26px}
+.timeline li::before{content:"";position:absolute;left:-7px;top:7px;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--navy)}
+.timeline li.now::before{background:var(--accent);border-color:var(--accent)}
+.timeline .when{font-size:13px;color:var(--sub);font-weight:700}
+.timeline h3{margin:0 0 4px;font-size:16px}
+.timeline p{margin:0;font-size:14.5px;color:var(--sub)}
+
+/* 進め方 */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;counter-reset:s}
+@media (max-width:760px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.steps div{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;counter-increment:s}
+.steps div::before{content:"STEP " counter(s);display:block;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent)}
+.steps b{display:block;font-size:15px;margin:2px 0 4px}
+.steps p{margin:0;font-size:13.5px;color:var(--sub)}
+
+/* 作品 */
+.filter{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}
+.filter button{font:inherit;font-size:13.5px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 14px;cursor:pointer;color:var(--ink)}
+.filter button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.works{display:grid;gap:16px}
+.work{display:grid;grid-template-columns:220px minmax(0,1fr);gap:20px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px}
+@media (max-width:700px){.work{grid-template-columns:minmax(0,1fr)}}
+.work .shot{border-radius:10px;overflow:hidden;background:#EEF0F3;aspect-ratio:16/10}
+.work .shot img{width:100%;height:100%;object-fit:cover;object-position:top}
+.work .shot.book{background:var(--accent-soft);display:flex;align-items:center;justify-content:center;padding:10px}
+.work .shot.book img{height:100%;width:auto;object-fit:contain}
+.work .shot.none{display:flex;align-items:center;justify-content:center;font-size:36px}
+.work h3{margin:0 0 4px;font-size:17px;line-height:1.5}
+.work .meta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.tag{font-size:11.5px;border-radius:6px;padding:1px 8px;background:var(--navy-soft);color:var(--navy);font-weight:500}
+.tag.real{background:var(--accent-soft);color:#B84400}
+.tag.demo{background:#F0F0F0;color:#666}
+.work dl{display:grid;grid-template-columns:5.5em minmax(0,1fr);gap:4px 12px;margin:0;font-size:14px}
+.work dt{color:var(--sub);font-weight:700;font-size:12.5px;padding-top:2px}
+.work dd{margin:0}
+.work .links{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;font-size:13.5px}
+.work .links a{font-weight:700}
+.work .links .wip,.work .links a.wip:hover{color:var(--sub);text-decoration:none;font-weight:500;cursor:default}
+.wgroup{margin-bottom:34px}
+.wg-title{display:flex;align-items:baseline;gap:4px 12px;flex-wrap:wrap;margin:0 0 14px;font-size:19px;color:var(--navy);padding-bottom:8px;border-bottom:1px solid var(--line)}
+.wg-title .en-s{display:inline;font-size:19px}
+.wg-title small{font-size:12.5px;color:var(--sub);font-weight:500}
+.work.extra{display:none}
+.wgroup.open .work.extra{display:grid}
+.more-btn{display:block;margin:16px auto 0;font:inherit;font-size:14px;font-weight:700;color:var(--navy);background:#fff;border:1.5px solid var(--navy);border-radius:999px;padding:9px 26px;cursor:pointer}
+.more-btn:hover{background:var(--navy);color:#fff}
+
+/* 学び */
+.learn{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.learn{grid-template-columns:minmax(0,1fr)}}
+.learn>div{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px}
+.learn h3{margin:4px 0 8px;font-size:16px;color:var(--navy);line-height:1.6}
+.learn p{margin:0;font-size:14px;color:var(--sub)}
+
+.foot{padding:36px 0 48px;color:var(--sub);font-size:13.5px;text-align:center}
+
+/* 印刷・PDF */
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff;font-size:11pt}
+  .head,.more-btn,.print-btn,.work .links{display:none!important}
+  .cover{padding:0 0 16px;border:0}
+  section{padding:18px 0;break-inside:auto}
+  .work,.skill,.steps div{break-inside:avoid}
+  .work{grid-template-columns:150px minmax(0,1fr);border-color:#ccc}
+  .work.extra{display:grid!important}
+  a{color:inherit;text-decoration:none}
+}
+</style>
+</head>
+<body>
+
+<header class="head">
+  <div class="inner">
+    <a class="me" href="#top">Megumi Sakamoto<small>職務ポートフォリオ</small></a>
+    <nav>
+      <a href="#skills">できること</a>
+      <a href="#career">経歴</a>
+      <a href="#how">進め方</a>
+      <a href="#works">作品</a>
+      <a href="#learn">学び</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="cover">
+  <div class="inner">
+    <p class="label">PORTFOLIO</p>
+    <h1>現場の困りごとを、<br>AIで「毎日使われる道具」にします。</h1>
+    <p class="name"><b>Megumi Sakamoto</b><span>元看護師 × Webデザイナー。AIで使う人に寄りそうアプリをつくります。</span></p>
+    <ul class="summary">
+      <li><span class="en-s">Know the field</span><b>現場を知っている</b>看護師として約10年、クリニックで働いてきました。使う人の一日と、つまずく所が分かります。</li>
+      <li><span class="en-s">Design &amp; teach</span><b>伝わる形にととのえる</b>Web制作会社でデザインと新人の育成を担当。「使いたくなる」画面にし、作り方も教えられます。</li>
+      <li><span class="en-s">Fast with AI</span><b>AIで速く形にする</b>Claude Code を使い、試作は2〜3日。実際に毎日使われるアプリを作ってきました。</li>
+    </ul>
+  </div>
+</div>
+
+<!-- できること -->
+<section id="skills">
+  <div class="inner">
+    <h2><span class="no">01</span><span class="en">Skills</span><span class="ja">できること</span></h2>
+    <p class="sec-lead">プログラミングは書かずに、AIへの頼み方で作ります。そのぶん、使う人の話を聞くことと、見た目・伝わり方に時間を使います。</p>
+    <div class="skills">
+      <div class="skill"><h3><span class="en-s">Healthcare</span>医療の現場</h3><ul>
+        <li>看護師として約10年、クリニックで勤務（秋田・東京）</li>
+        <li>検査の流れ・患者さんへの声かけ・スタッフ同士の段取りが分かる</li>
+        <li>シフトや評価の管理など、現場の困りごとを言葉にして形にする</li>
+      </ul></div>
+      <div class="skill"><h3><span class="en-s">AI &amp; Web</span>AIを使ったアプリづくり</h3><ul>
+        <li>Claude Code で、試作から修正・公開まで一人で進める</li>
+        <li>AIへの頼み方（指示の書き方）を、目的に合わせて組み立てる</li>
+        <li>スマホで使えるアプリ、GitHub Pages での公開、Firebase でのデータ共有</li>
+        <li>AIの画像生成で、絵本の絵や画面の素材を作る</li>
+      </ul></div>
+      <div class="skill"><h3><span class="en-s">Design</span>デザイン</h3><ul>
+        <li>配色・文字・余白をととのえた、使いたくなる画面づくり</li>
+        <li>お客さまの気持ちの順番に沿った、ホームページの組み立て</li>
+        <li>MV（ページ一番上の大きな画像）やバナーの考え方</li>
+      </ul></div>
+      <div class="skill"><h3><span class="en-s">Teaching &amp; Publishing</span>教える・まとめる・出版する</h3><ul>
+        <li>新人デザイナーの育成と、研修の内容づくり</li>
+        <li>手順書・説明文を、相手に合わせたやさしい言葉で書く</li>
+        <li>Amazon で絵本を2冊出版（Kindle版・ペーパーバック）</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- 経歴 -->
+<section id="career" style="background:var(--paper)">
+  <div class="inner">
+    <h2><span class="no">02</span><span class="en">Career</span><span class="ja">経歴</span></h2>
+    <ol class="flow">
+      <li><span class="when">Nurse ／ 9年</span><h3>秋田のクリニック</h3><p class="role">看護師</p><p>地元・秋田のクリニックで、看護師として9年間勤務。</p></li>
+      <li><span class="when">Nurse ／ 約1年半</span><h3>東京のクリニック</h3><p class="role">看護師</p><p>結婚を機に東京へ。看護師として勤務。</p></li>
+      <li><span class="when">Web Designer ／ 1年半</span><h3>Web制作会社</h3><p class="role">デザイン・新人育成</p><p>未経験からWebデザイナーに転身。ホームページのデザイン、新人の育成・研修づくり、社内のAI活用に取り組む。</p></li>
+      <li class="now"><span class="when">Now ／ 現在</span><h3>AIで道具づくり</h3><p class="role">クリニックに単発で勤務</p><p>AIの活用に打ち込むため退職。現場で働きながらアプリを作り、使ってもらっている。2026年11月から「omega works」を準備中。</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- 進め方 -->
+<section id="how">
+  <div class="inner">
+    <h2><span class="no">03</span><span class="en">Process</span><span class="ja">仕事の進め方</span></h2>
+    <p class="sec-lead">作る前に「どんな一日を過ごしているか」を聞くところから始めます。</p>
+    <div class="steps">
+      <div><b>聞く</b><p>困っていること、今のやり方、使う人と場面を聞きます。</p></div>
+      <div><b>すぐ試作</b><p>2〜3日で動く試作を作り、さわってもらいます。</p></div>
+      <div><b>使ってもらう</b><p>実際の仕事や生活の中で使い、気づいたことを集めます。</p></div>
+      <div><b>直して育てる</b><p>言葉・ボタンの大きさ・決まりごとまで合わせて直します。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 作品 -->
+<section id="works" style="background:var(--paper)">
+  <div class="inner">
+    <h2><span class="no">04</span><span class="en">Works</span><span class="ja">作品</span></h2>
+    <p class="sec-lead"><span class="tag real">実際に使用</span> は職場や家庭で使われているもの、<span class="tag demo">見本</span> は架空の施設を想定して作ったものです。</p>
+    <div class="wgroup">
+      <h3 class="wg-title"><span class="en-s">Work Tools</span>仕事の道具・ホームページ<small>8点</small></h3>
+      <div class="works">
+      <article class="work" data-c="work">
+        <div class="shot"><img src="img/harusora-shift.png" alt="クリニックのシフト自動作成の画面" loading="lazy"></div>
+        <div>
+          <h3>クリニックのシフト自動作成</h3>
+          <div class="meta"><span class="tag real">実際に使用</span><span class="tag">Firebase</span><span class="tag">スマホで共有</span></div>
+          <dl>
+            <dt>きっかけ</dt><dd>紙でシフトを作り、写真をLINEで送っていた。扶養内で働く人の時間数に、いつも気をつかっていた。</dd>
+            <dt>作ったもの</dt><dd>シフトの自動作成、PDF・印刷。合言葉で「見るだけ」と「編集」を分け、みんなのスマホで同じシフトを見られる。</dd>
+            <dt>工夫</dt><dd>一人ひとりの時間数をひと目で出し、扶養の範囲を気にしやすくした。</dd>
+            <dt>反応</dt><dd>シフト作成の担当者から「試しの段階でも、ざっくり時間が分かるだけでかなり使いやすい」。</dd>
+          </dl>
+          <div class="links"><a class="wip" href="https://claude.ai/artifact/VRQjRufavwrSvmrbUbE9vi" target="_blank" rel="noopener">さわってみる（※準備中）</a></div>
+        </div>
+      </article>
+      <article class="work" data-c="work">
+        <div class="shot none">🩻</div>
+        <div>
+          <h3>検査の練習アプリ（レントゲン・スパイロ・ピコ ほか）</h3>
+          <div class="meta"><span class="tag">新人教育</span></div>
+          <dl>
+            <dt>きっかけ</dt><dd>クリニックの新人が覚える検査の手順が多く、教える側の時間も足りない。</dd>
+            <dt>作ったもの</dt><dd>実際の流れどおりに操作して覚える練習アプリ。声かけの合図や、結果の伝え方まで練習できる。苦手な所を先に出す練習帳も。</dd>
+          </dl>
+          <div class="links"><span class="wip">さわってみる（※準備中）：</span><a class="wip" href="https://claude.ai/artifact/QMcf98codp7Dy1nYR6HCyh" target="_blank" rel="noopener">レントゲン</a><a class="wip" href="https://claude.ai/artifact/CbmPzRjCjzrUxHSSvJtewU" target="_blank" rel="noopener">スパイロ</a><a class="wip" href="https://claude.ai/artifact/7icBSUMtC3ndYw2LriqqEZ" target="_blank" rel="noopener">ピコ</a></div>
+        </div>
+      </article>
+      <article class="work extra" data-c="work">
+        <div class="shot none">🗓️</div>
+        <div>
+          <h3>土曜・連休の出勤シフト表</h3>
+          <div class="meta"><span class="tag">自動割り振り</span></div>
+          <dl>
+            <dt>きっかけ</dt><dd>4チームで土曜・連休の出勤を公平に割り振るのが、毎回もめる。産休明けの人の数え方もややこしい。</dd>
+            <dt>作ったもの</dt><dd>人数の比率とスタッフを入れると、公平に自動で割り振る。手当の付く日は印を付け、手で調整もできる。</dd>
+          </dl>
+          <div class="links"><a class="wip" href="https://claude.ai/artifact/7oEAE3ukEjG9nPMSbnikfs" target="_blank" rel="noopener">さわってみる（※準備中）</a></div>
+        </div>
+      </article>
+      <article class="work extra" data-c="work">
+        <div class="shot"><img src="img/barthel.png" alt="リハビリ評価・提出の管理画面" loading="lazy"></div>
+        <div>
+          <h3>リハビリ評価・提出の管理</h3>
+          <div class="meta"><span class="tag">期限の見える化</span><span class="tag">CSV</span></div>
+          <dl>
+            <dt>きっかけ</dt><dd>デイサービスの加算のための評価が、3か月ごと・測定月ごとで期限がばらばら。もれが心配。</dd>
+            <dt>作ったもの</dt><dd>2種類の加算を別々に追いかけ、「今月やる人」「期限切れ」「休止」「提出済み」を1画面で色分け。</dd>
+          </dl>
+          <div class="links"><a class="wip" href="https://claude.ai/artifact/QvGTDc7xYCzmBMwREJCfKY" target="_blank" rel="noopener">さわってみる（※準備中）</a></div>
+        </div>
+      </article>
+      <article class="work extra" data-c="work">
+        <div class="shot"><img src="img/slta-aid.png" alt="失語症検査の採点補助の画面" loading="lazy"></div>
+        <div>
+          <h3>失語症検査（SLTA）の採点補助</h3>
+          <div class="meta"><span class="tag">オフライン</span><span class="tag">合言葉で保護</span></div>
+          <dl>
+            <dt>きっかけ</dt><dd>言語聴覚士が採点のたびに、分厚いマニュアルをめくっている。</dd>
+            <dt>作ったもの</dt><dd>語の列挙・叙述・反応の分類を、本を見ずに採点できる。データを外に送らない作り。</dd>
+          </dl>
+          <div class="links"><a href="https://omega-ai-lab-39.github.io/slta-aid/" target="_blank" rel="noopener">さわってみる（入口のみ・合言葉が必要） →</a></div>
+        </div>
+      </article>
+      <article class="work extra" data-c="work">
+        <div class="shot"><img src="img/carecompass.png" alt="ケアコンパスの画面" loading="lazy"></div>
+        <div>
+          <h3>業務システム「ケアコンパス」</h3>
+          <div class="meta"><span class="tag demo">見本</span><span class="tag">AI要約</span><span class="tag">承認の流れ</span></div>
+          <dl>
+            <dt>想定</dt><dd>デイサービスの申し送りと見守り。誰を先に見るべきかが、人によってちがう。</dd>
+            <dt>作ったもの</dt><dd>AIが申し送りを要約し、見守りが必要な人を上に出すダッシュボード。利用者管理・リハビリ記録・承認・分析レポート。</dd>
+          </dl>
+          <div class="links"><a href="https://omega-ai-lab-39.github.io/hidamari-no-ie/staff/" target="_blank" rel="noopener">さわってみる →</a></div>
+        </div>
+      </article>
+      <article class="work extra" data-c="work">
+        <div class="shot"><img src="img/shift-monthly.png" alt="月間勤務表の自動作成の画面" loading="lazy"></div>
+        <div>
+          <h3>月間勤務表の自動作成</h3>
+          <div class="meta"><span class="tag demo">見本</span><span class="tag">ルールの確認</span></div>
+          <dl>
+            <dt>想定</dt><dd>資格・送迎の運転・希望休を見ながら、毎月手で勤務表を組む。</dd>
+            <dt>作ったもの</dt><dd>スタッフの条件を入れると自動で勤務表を作り、ルール違反がないか確かめる。</dd>
+          </dl>
+          <div class="links"><span class="wip">さわってみる（※準備中）</span></div>
+        </div>
+      </article>
+      <article class="work extra" data-c="web">
+        <div class="shot"><img src="img/hidamari-lp.png" alt="デイサービスのホームページの画面" loading="lazy"></div>
+        <div>
+          <h3>デイサービスのホームページ</h3>
+          <div class="meta"><span class="tag demo">見本</span><span class="tag">ホームページ</span></div>
+          <dl>
+            <dt>想定</dt><dd>リハビリ特化のデイサービスを探す家族に、「ここなら安心」と感じてもらう。</dd>
+            <dt>作ったもの</dt><dd>温かい配色とイラストで、サービス紹介からアクセスまでを一貫したトーンで。</dd>
+          </dl>
+          <div class="links"><a href="https://omega-ai-lab-39.github.io/hidamari-no-ie/" target="_blank" rel="noopener">見てみる →</a></div>
+        </div>
+      </article>
+      </div>
+      <button class="more-btn" type="button" data-more="あと6つ">もっと見る（あと6つ）</button>
+    </div>
+    <div class="wgroup">
+      <h3 class="wg-title"><span class="en-s">Family &amp; Life</span>暮らし・子ども<small>7点</small></h3>
+      <div class="works">
+      <article class="work" data-c="life">
+        <div class="shot"><img src="img/dekitayo.png" alt="できたよボードの画面" loading="lazy"></div>
+        <div>
+          <h3>できたよボード</h3>
+          <div class="meta"><span class="tag real">毎日使用中</span><span class="tag">子ども向け</span></div>
+          <dl>
+            <dt>きっかけ</dt><dd>3歳の息子が、言わないとゴロゴロ、言っても支度をしない。</dd>
+            <dt>作ったもの</dt><dd>時間つきのやること表。できたら星、1週間でスタンプ。時計の読み方つき。</dd>
+            <dt>変化</dt><dd>自分でボタンを押したくて、自分から動くようになった。</dd>
+          </dl>
+          <div class="links"><a href="https://claude.ai/artifact/NVQNzwQSe124EZVfGbwSNy" target="_blank" rel="noopener">さわってみる →</a></div>
+        </div>
+      </article>
+      <article class="work" data-c="life">
+        <div class="shot"><img src="img/omise.png" alt="おみせやさんの画面" loading="lazy"></div>
+        <div>
+          <h3>おみせやさん</h3>
+          <div class="meta"><span class="tag real">実際に使用</span><span class="tag">ホーム画面に置ける</span></div>
+          <dl>
+            <dt>きっかけ</dt><dd>お店屋さんごっこが大好き。でもハンバーガー屋さんなのに、うどんやカレーが出てくる。</dd>
+            <dt>作ったもの</dt><dd>名前と好きな動物を選んで、自分の商店街で遊ぶ。遊びながら商品の名前を覚える。</dd>
+            <dt>工夫</dt><dd>実際に遊ぶ様子を見ながら、英語の先生など少し難しいモードを足していった。</dd>
+          </dl>
+          <div class="links"><a href="https://omega-ai-lab-39.github.io/omise/" target="_blank" rel="noopener">さわってみる →</a></div>
+        </div>
+      </article>
+      <article class="work extra" data-c="life">
+        <div class="shot"><img src="img/kids-english.png" alt="えいごかいわの画面" loading="lazy"></div>
+        <div>
+          <h3>えいご かいわ（3歳向け）</h3>
+          <div class="meta"><span class="tag">音声つき</span></div>
+          <dl>
+            <dt>作ったもの</dt><dd>タップすると英語で言うことばカード、クイズ、まねっこ会話。</dd>
+          </dl>
+          <div class="links"><a class="wip" href="https://claude.ai/artifact/4VU5VPzhii6XaC7DtXGKbf" target="_blank" rel="noopener">さわってみる（※準備中）</a></div>
+        </div>
+      </article>
+      <article class="work extra" data-c="life">
+        <div class="shot none">🗂️</div>
+        <div>
+          <h3>英語Q&amp;Aカード（大人向け）</h3>
+          <div class="meta"><span class="tag real">実際に使用</span><span class="tag">暗記カード</span></div>
+          <dl>
+            <dt>きっかけ</dt><dd>仕事で英語を使う家族が、その日に覚えた言い回しを忘れないようにしたい。</dd>
+            <dt>作ったもの</dt><dd>覚えたことをカードに登録し、めくってテスト。メモの写真も付けられ、覚えた割合が分かる。</dd>
+          </dl>
+          <div class="links"><a href="https://claude.ai/artifact/UWxGoX9UdetixbgV9thPuZ" target="_blank" rel="noopener">さわってみる →</a></div>
+        </div>
+      </article>
+      <article class="work extra" data-c="life">
+        <div class="shot none">🎙️</div>
+        <div>
+          <h3>英語プレゼンの練習（読み上げ）</h3>
+          <div class="meta"><span class="tag real">実際に使用</span><span class="tag">音声読み上げ</span></div>
+          <dl>
+            <dt>きっかけ</dt><dd>英語のプレゼン原稿を、声に出して何度も練習したい。</dd>
+            <dt>作ったもの</dt><dd>原稿を読み上げ、今の文と単語を色で追える。速さの調整、1文くり返し、文字を隠して聴くだけの練習も。</dd>
+          </dl>
+          <div class="links"><a href="https://claude.ai/artifact/LeaaCmy5tMvwHmE4aAPvV5" target="_blank" rel="noopener">さわってみる →</a></div>
+        </div>
+      </article>
+      <article class="work extra" data-c="life">
+        <div class="shot"><img src="img/zaiko.png" alt="在庫の管理の画面" loading="lazy"></div>
+        <div>
+          <h3>おうちの在庫</h3>
+          <div class="meta"><span class="tag real">実際に使用</span><span class="tag">スマホとPCで同じデータ</span></div>
+          <dl>
+            <dt>作ったもの</dt><dd>残りの日数・なくなる日・使うペースを出し、買い物リストを作る。ネット注文の読み込みにも対応。</dd>
+          </dl>
+          <div class="links"><a class="wip" href="https://claude.ai/artifact/FBeKiwVVNyn6uktfjdLTVW" target="_blank" rel="noopener">さわってみる（※準備中）</a></div>
+        </div>
+      </article>
+      <article class="work extra" data-c="life">
+        <div class="shot"><img src="img/nisa.png" alt="NISA積立シミュレーターの画面" loading="lazy"></div>
+        <div>
+          <h3>NISA積立シミュレーター</h3>
+          <div class="meta"><span class="tag">グラフ</span></div>
+          <dl>
+            <dt>作ったもの</dt><dd>年齢ごとの積立プランをいくつか作り、増え方を重ねて比べる。甥っ子とのお金の話のために作った。</dd>
+          </dl>
+          <div class="links"><a class="wip" href="https://claude.ai/artifact/W2Bq2jQGr3P1bTSRPJeeUE" target="_blank" rel="noopener">さわってみる（※準備中）</a></div>
+        </div>
+      </article>
+      </div>
+      <button class="more-btn" type="button" data-more="あと5つ">もっと見る（あと5つ）</button>
+    </div>
+    <div class="wgroup">
+      <h3 class="wg-title"><span class="en-s">Books &amp; Games</span>本・ゲーム<small>2点</small></h3>
+      <div class="works">
+      <article class="work" data-c="book">
+        <div class="shot book"><img src="img/book-hoikuen.jpg" alt="絵本『ほいくえん いきたくないな』の表紙" loading="lazy"></div>
+        <div>
+          <h3>絵本『ほいくえん いきたくないな』『はじめてのおとまり』</h3>
+          <div class="meta"><span class="tag real">販売中</span><span class="tag">Amazon KDP</span></div>
+          <dl>
+            <dt>作ったもの</dt><dd>AIで絵と文をつくり、Kindle版とペーパーバックで出版。表紙・中の組み方・販売ページまで一人で。</dd>
+          </dl>
+          <div class="links"><a href="https://www.amazon.co.jp/dp/B0HG6HN39T" target="_blank" rel="noopener">ほいくえん →</a><a href="https://www.amazon.co.jp/dp/B0HG4TR31B" target="_blank" rel="noopener">おとまり →</a></div>
+        </div>
+      </article>
+      <article class="work" data-c="book">
+        <div class="shot"><img src="img/tetris.png" alt="トレインテトリスの画面" loading="lazy"></div>
+        <div>
+          <h3>ゲーム2本（トレインテトリス・機関車シューティング）</h3>
+          <div class="meta"><span class="tag">JavaScript</span></div>
+          <dl>
+            <dt>作ったもの</dt><dd>電車がモチーフのブロックパズル（スコア・HOLD・効果音）と、縦に進むシューティング（ボス・ボム・パワーアップ）。</dd>
+          </dl>
+        </div>
+      </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 学び -->
+<section id="learn">
+  <div class="inner">
+    <h2><span class="no">05</span><span class="en">Learning</span><span class="ja">学び</span></h2>
+    <p class="sec-lead">学校と研修で基本を学び、あとは作りながら身につけてきました。</p>
+    <div class="learn">
+      <div><span class="en-s">School</span><h3>ユニコスクール<br>「AIエージェント開発コース」</h3><p>Claude Code の使い方から、アプリの公開までを受講。</p></div>
+      <div><span class="en-s">Training</span><h3>Web制作会社の<br>社内研修</h3><p>ホームページの設計（お客さまの気持ちの順番に沿った組み立て）とデザインを学ぶ。</p></div>
+      <div><span class="en-s">Learning by making</span><h3>作って、使ってもらって<br>覚える</h3><p>15本以上のアプリと絵本2冊を、実際に使う人の声を聞きながら作ってきました。</p></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="inner"><span style="font-family:'Cormorant Garamond',serif;font-size:17px;letter-spacing:.1em;color:var(--navy)">Megumi Sakamoto</span><br>ご連絡は、応募書類に記載の連絡先からお願いいたします。</div>
+</footer>
+
+<script>
+// 作品の「もっと見る」
+document.querySelectorAll('.more-btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    var g=b.closest('.wgroup'); var open=g.classList.toggle('open');
+    b.textContent=open?'閉じる':'もっと見る（'+b.dataset.more+'）';
+  });
+});
+</script>
+</body>
+</html>
