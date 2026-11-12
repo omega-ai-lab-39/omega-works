@@ -569,3 +569,8 @@ a.mv-card .cap b::after{width:20px;height:20px;font-size:12px}
 .bene div{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:10px;row-gap:6px;align-items:center;align-content:start}
 .bene div h3{margin:0}
 .bene div p{grid-column:1 / -1}
+/* お問い合わせのカードの見出し：太字をやめて色で目立たせる */
+.path h3{font-family:var(--round);font-weight:500;color:var(--orange-deep);font-size:22px;display:flex;align-items:center;gap:10px}
+.path h3 .pi{font-size:34px;line-height:1}
+@media (min-width:901px){.path h3{font-size:19.5px;letter-spacing:.02em;gap:8px}.path h3 .pi{font-size:30px}}
+@media (min-width:901px) and (max-width:1100px){.path{padding:24px 20px}.path h3{font-size:17px;letter-spacing:0}.path h3 .pi{font-size:26px}}
