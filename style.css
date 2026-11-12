@@ -551,3 +551,7 @@ a.mv-card .cap b::after{width:20px;height:20px;font-size:12px}
   .mv-card.c1{rotate:-3deg}.mv-card.c2{left:10%;rotate:3deg;z-index:2}.mv-card.c3{right:2%;rotate:6deg;z-index:3}
 }
 @media (max-width:560px){.mv-card.c1{rotate:-3deg}.mv-card.c2{rotate:4deg}}
+/* MV：お客さんの声を3つ並べる */
+.mv-voice{margin:0 0 10px!important}
+.mv-voice .q{display:block;font-weight:700;color:var(--ink);line-height:1.9}
+.mv-text p .ph{display:inline-block}
