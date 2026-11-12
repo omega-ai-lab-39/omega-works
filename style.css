@@ -503,3 +503,19 @@ a.mv-card .cap b::after{content:"→";display:inline-flex;align-items:center;jus
   .voice.talk .bubble::before{left:30px;top:-14px;border:10px solid transparent;border-bottom:16px solid #fff;border-top:0}
   .voice.talk .bubble p{font-size:15px}
 }
+/* 写真カードの説明：文字と矢印を見やすく */
+.mv-card .cap{font-size:13px}
+.mv-card .cap em{font-size:12px}
+.mv-card .cap .to{display:inline-block;color:var(--orange);font-weight:700;font-size:16px;line-height:1;margin:0 5px;vertical-align:-1px}
+a.mv-card .cap b::after{width:20px;height:20px;font-size:12px}
+@media (max-width:560px){
+  .mv-card .cap{font-size:11.5px}
+  .mv-card .cap em{font-size:10.5px}
+  .mv-card .cap .to{font-size:14px;margin:0 3px}
+  a.mv-card .cap b::after{width:17px;height:17px;font-size:10px}
+}
+@media (max-width:380px){.mv-card .cap{font-size:11px}.mv-card .cap em{font-size:10px}}
+.mv-card .cap{font-size:12.5px;letter-spacing:0}
+.mv-card .cap .to{margin:0 4px}
+@media (max-width:560px){.mv-card .cap{font-size:11.5px}}
+@media (max-width:380px){.mv-card .cap{font-size:11px}.mv-card .cap em{font-size:9.5px}}
