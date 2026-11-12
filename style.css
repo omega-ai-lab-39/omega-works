@@ -455,3 +455,7 @@ form.form{max-width:700px;margin:0 auto;background:var(--card);color:var(--ink);
 }
 @media (max-width:360px){.head .logo small{display:none}}
 @media (min-width:901px) and (max-width:1100px){.nav a{padding:8px 8px;font-size:14px}.nav a.coco{padding:7px 12px}.nav a.cta{padding:9px 14px}.nav a.insta{padding:8px 6px}.logo b{font-size:19px}}
+/* 名前の由来 */
+.me-origin{margin:10px auto 0;max-width:340px;font-size:13.5px;line-height:1.85;color:var(--sub)}
+.me-origin .omega{display:block;font-family:Georgia,serif;font-size:22px;color:var(--orange);line-height:1.2;margin-bottom:2px}
+.me-origin .ph{display:inline-block}
