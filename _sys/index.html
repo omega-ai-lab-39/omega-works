@@ -436,7 +436,7 @@ function setup(path,f){
   ins.sort(function(a,b){ return a[0]-b[0]; });
   var out=[], p=0; ins.forEach(function(x){ out.push(src.slice(p,x[0]),x[1]); p=x[0]; }); out.push(src.slice(p));
   var html=out.join('');
-  var css='<style>omw-t{outline:1px dashed transparent;outline-offset:2px;border-radius:3px;cursor:text}omw-t:hover{outline-color:#E2805A}omw-t:focus{outline:2px solid #E2805A;background:rgba(255,243,176,.6)}omw-t.changed{background:rgba(255,243,176,.9)}img[data-k]{cursor:pointer}img[data-k]:hover{outline:3px dashed #E2805A;outline-offset:-3px}img.changed{outline:3px solid #E2805A;outline-offset:-3px}</style>';
+  var css='<style>omw-t{outline:1px dashed transparent;outline-offset:2px;border-radius:3px;cursor:text}omw-t:hover{outline-color:#E2805A}omw-t:focus{outline:2px solid #E2805A;background:rgba(255,243,176,.6)}omw-t.changed{background:rgba(255,243,176,.9)}img[data-k]{cursor:pointer}img[data-k]:hover{outline:3px dashed #E2805A;outline-offset:-3px}img.changed{outline:3px solid #E2805A;outline-offset:-3px}.sp-bar{transform:none!important}.omw-flash{outline:3px solid #E2805A!important;outline-offset:3px;box-shadow:0 0 0 8px rgba(226,128,90,.35)!important;border-radius:6px}</style>';
   html=html.replace(/<head\b[^>]*>/i,function(h){ return h+'<base href="../">'; }).replace(/<\/head>/i,css+'</head>');
 
   var fr=document.createElement('iframe'); fr.title='ページの見本';
@@ -493,6 +493,7 @@ function wire(fr){
     if(t.closest('a,button,label,summary,.shot,form')){ e.preventDefault(); e.stopPropagation(); }
   },true);
   doc.addEventListener('submit',function(e){ e.preventDefault(); e.stopPropagation(); },true);
+  refresh();
 }
 
 $('m-title').addEventListener('input',function(){ if(cur&&cur.title){ cur.title.val=this.value; refresh(); } });
@@ -527,13 +528,32 @@ function shrink(file,max){
     return new Promise(function(res,rej){ var fr=new FileReader(); fr.onload=function(){ res({data:fr.result,ext:b.type==='image/webp'?'webp':'png'}); }; fr.onerror=rej; fr.readAsDataURL(b); });
   });
 }
+function where(id){
+  var el=elOf(id); if(!el||!el.closest) return "";
+  if(el.closest(".sp-bar")) return "スマホの下の帯";
+  if(el.closest(".head")) return "上のメニュー";
+  if(el.closest("footer")) return "いちばん下";
+  return "";
+}
+function goTo(id){
+  var el=elOf(id); if(!el) return;
+  $("side").classList.remove("open");
+  var go=function(){
+    if(!el.getClientRects().length){ setStatus("この場所は今の見え方では見えません。「スマホの見え方」に切りかえてみてください。","ng"); return; }
+    if(!el.closest(".sp-bar")){ setStatus(""); el.scrollIntoView({block:"center",behavior:"smooth"}); }
+    var t=el.closest("a")||el; t.classList.add("omw-flash"); setTimeout(function(){ t.classList.remove("omw-flash"); },1800);
+    if(el.focus && el.isContentEditable) el.focus({preventScroll:true});
+  };
+  if(el.closest(".sp-bar") && !$("stage").classList.contains("phone")){ setView(true); setStatus("スマホの下の帯にあります。スマホの見え方に切りかえました。","ok"); setTimeout(go,400); }
+  else go();
+}
 function mediaList(){ return cur?cur.items.filter(function(g){ return g.kind==='img'||g.emoji; }):[]; }
 function renderMedia(){
   var box=$('mediaList'), list=mediaList();
   if(!list.length){ box.innerHTML='<p class="empty">このページには差しかえられる画像がありません。</p>'; return; }
   box.innerHTML=list.map(function(g){
     var th= g.data ? '<img src="'+g.data+'" alt="">' : g.kind==='img' ? '<img src="../'+esc(g.orig)+'" alt="">' : '<span class="emo">'+esc(g.orig)+'</span>';
-    return '<div class="media'+(g.data?' on':'')+'"><div class="th">'+th+'</div><div class="mb"><div class="mn">'+esc(g.kind==='img'?(g.alt||'画像'):'アイコン')+(g.data?'<br><b style="color:var(--coral-d)">差しかえ予定</b>':'')+'</div>'+
+    return '<div class="media'+(g.data?' on':'')+'"><div class="th">'+th+'</div><div class="mb"><div class="mn">'+esc(g.kind==='img'?(g.alt||'画像'):'アイコン')+(where(g.id)?'<span style="color:var(--sub)">（'+where(g.id)+'）</span>':'')+(g.data?'<br><b style="color:var(--coral-d)">差しかえ予定</b>':'')+'</div>'+
       '<div class="ops"><button class="link" data-pick="'+g.id+'">差しかえる</button><button class="link" data-go="'+g.id+'">場所を見る</button>'+(g.data?'<button class="link" data-back="'+g.id+'">元にもどす</button>':'')+'</div></div></div>';
   }).join('');
 }
@@ -564,7 +584,7 @@ function refresh(){
 function onOps(e){
   var b=e.target.closest('button'); if(!b||!cur) return;
   if(b.dataset.pick!=null){ pickFor(cur.items[+b.dataset.pick]); return; }
-  if(b.dataset.go!=null){ var el=elOf(b.dataset.go); if(el){ el.scrollIntoView({block:'center',behavior:'smooth'}); if(el.focus) el.focus(); $('side').classList.remove('open'); } return; }
+  if(b.dataset.go!=null){ goTo(b.dataset.go); return; }
   if(b.dataset.back!=null){
     var g=cur.items[+b.dataset.back], el2=elOf(g.id);
     g.val=g.orig;
