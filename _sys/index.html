@@ -257,7 +257,7 @@ $('setupForm').addEventListener('submit',function(e){
     $('s-pw1').value=$('s-pw2').value=$('s-tok').value='';
     if(!stored){ m.className='msg ng'; m.textContent='この機械には鍵を置けませんでした（記録を残さない設定のようです）。今回だけ使えます。'; }
     openApp();
-  }).catch(function(r){ token=null; m.className='msg ng'; m.textContent=ghError(r&&r.status?r:null); })
+  }).catch(function(r){ token=null; m.className='msg ng'; m.textContent=(r&&r.status===401)?'GitHubの鍵がまちがっているか、期限が切れています。もう一度コピーして貼ってください。':ghError(r&&r.status?r:null); })
     .then(function(){ $('setupBtn').disabled=false; });
 });
 
