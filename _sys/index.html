@@ -127,7 +127,7 @@ button,input,select{font:inherit}
     <a class="btn sub small wide" id="liveLink" href="../" target="_blank" rel="noopener" style="text-decoration:none">公開ページを見る</a>
     <button class="btn sub small" type="button" id="lockBtn">とじる</button>
   </div>
-  <div class="help">直したい文字をクリック（スマホはタップ）すると、そのまま書きかえられます。終わったら「公開する」を押します。</div>
+  <div class="help">直したい文字をクリック（スマホはタップ）すると、そのまま書きかえられます。改行は Enter。終わったら「公開する」を押します。</div>
   <div class="main">
     <div class="stage" id="stage"><div class="loading" id="loading">読みこみ中…</div></div>
     <aside class="side" id="side">
@@ -393,13 +393,29 @@ function setup(path,f){
   refresh();
 }
 
+// 見本の文字を読む（改行は \n にする）
+function readSeg(el){ var s=''; el.childNodes.forEach(function(n){ s+= n.nodeName==='BR' ? '\n' : n.textContent; }); return s.replace(/​/g,''); }
+// ファイルに書く形（改行は <br>）
+function encSeg(g){ return g.kind==='desc' ? encAttr(g.val) : encText(g.val).replace(/\n/g,'<br>'); }
+function showVal(s){ return esc(s).replace(/\n/g,'<span style="color:var(--coral)">↵</span><br>'); }
 var plainOK=(function(){ var d=document.createElement('div'); try{ d.contentEditable='plaintext-only'; }catch(e){ return false; } return d.contentEditable==='plaintext-only'; })();
 function wire(fr){
   var doc=fr.contentDocument; if(!doc) return;
   doc.querySelectorAll('[data-seg]').forEach(function(el){
     el.contentEditable=plainOK?'plaintext-only':'true'; el.spellcheck=false;
-    el.addEventListener('input',function(){ var g=cur.segs[+el.dataset.seg]; g.val=el.textContent; el.classList.toggle('changed',g.val!==g.orig); refresh(); });
-    el.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); el.blur(); } });
+    var upd=function(){ var g=cur.segs[+el.dataset.seg]; g.val=readSeg(el); el.classList.toggle('changed',g.val!==g.orig); refresh(); };
+    el.addEventListener('input',upd);
+    // Enter で改行（日本語の変換中の Enter はそのまま）
+    el.addEventListener('keydown',function(e){
+      if(e.key!=='Enter' || e.isComposing || e.keyCode===229) return;
+      e.preventDefault();
+      var sel=doc.getSelection(); if(!sel.rangeCount) return;
+      var r=sel.getRangeAt(0); r.deleteContents();
+      var br=doc.createElement('br'); r.insertNode(br);
+      if(!br.nextSibling || (br.nextSibling.nodeType===3 && !br.nextSibling.data && !br.nextSibling.nextSibling)) br.parentNode.insertBefore(doc.createTextNode('​'),br.nextSibling);
+      var r2=doc.createRange(); r2.setStartAfter(br); r2.collapse(true); sel.removeAllRanges(); sel.addRange(r2);
+      upd();
+    });
     el.addEventListener('paste',function(e){ e.preventDefault(); var t=(e.clipboardData||window.clipboardData).getData('text/plain').replace(/[\r\n]+/g,' '); doc.execCommand('insertText',false,t); });
     el.addEventListener('drop',function(e){ e.preventDefault(); });
   });
@@ -431,7 +447,7 @@ function refresh(){
   box.innerHTML=list.map(function(g){
     var lb=label(g);
     return '<div class="chg">'+(lb?'<div style="font-size:12px;color:var(--sub)">'+lb+'</div>':'')+
-      '<div class="b">'+esc(g.orig)+'</div><div class="a">'+(g.val?esc(g.val):'<span style="color:var(--ng)">（からっぽ）</span>')+'</div>'+
+      '<div class="b">'+showVal(g.orig)+'</div><div class="a">'+(g.val?showVal(g.val):'<span style="color:var(--ng)">（からっぽ）</span>')+'</div>'+
       '<div class="ops">'+(g.wrap?'<button class="link" data-go="'+g.id+'">場所を見る</button>':'')+'<button class="link" data-back="'+(g.kind==='desc'?'desc':g.id)+'">元にもどす</button></div></div>';
   }).join('');
 }
@@ -449,7 +465,7 @@ $('chgList').addEventListener('click',function(e){
 
 function build(){
   var src=cur.src, out=[], p=0;
-  changes().forEach(function(g){ out.push(src.slice(p,g.s), g.kind==='desc'?encAttr(g.val):encText(g.val)); p=g.e; });
+  changes().forEach(function(g){ out.push(src.slice(p,g.s), encSeg(g)); p=g.e; });
   out.push(src.slice(p)); return out.join('');
 }
 
@@ -460,7 +476,7 @@ function rebase(){
   var shift=0;
   all.forEach(function(g){
     var len=g.e-g.s; g.s+=shift;
-    if(g.val!==g.orig){ var nr=g.kind==='desc'?encAttr(g.val):encText(g.val); g.e=g.s+nr.length; shift+=nr.length-len; g.raw=nr; g.orig=g.val; }
+    if(g.val!==g.orig){ var nr=encSeg(g); g.e=g.s+nr.length; shift+=nr.length-len; g.raw=nr; g.orig=g.val; }
     else g.e=g.s+len;
   });
 }
@@ -469,7 +485,7 @@ $('pubBtn').addEventListener('click',function(){
   var list=changes(); if(!list.length) return;
   var name=$('pageSel').selectedOptions[0].textContent;
   var html='<p>「'+esc(name)+'」のページを、次のように直して公開します。</p>'+list.map(function(g){
-    return '<div class="chg">'+(label(g)?'<div style="font-size:12px;color:var(--sub)">'+label(g)+'</div>':'')+'<div class="b">'+esc(g.orig)+'</div><div class="a">'+(g.val?esc(g.val):'（からっぽ）')+'</div></div>';
+    return '<div class="chg">'+(label(g)?'<div style="font-size:12px;color:var(--sub)">'+label(g)+'</div>':'')+'<div class="b">'+showVal(g.orig)+'</div><div class="a">'+(g.val?showVal(g.val):'（からっぽ）')+'</div></div>';
   }).join('')+'<p style="font-size:13px;color:var(--sub)">公開ページに出るまで1〜2分かかります。</p>';
   ask('公開しますか？',html,'公開する').then(function(y){ if(y) publish(list,name); });
 });
