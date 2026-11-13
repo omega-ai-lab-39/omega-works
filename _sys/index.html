@@ -47,7 +47,10 @@ button,input,select{font:inherit}
 .help{background:#FFF8E6;border-bottom:1px solid #f0e2bd;font-size:13px;padding:7px 14px;color:#6b5a2e}
 .main{flex:1;display:flex;min-height:0}
 .stage{flex:1;overflow:auto;display:flex;justify-content:center;background:#e9e2d8}
+.stage{position:relative}
 .stage iframe{border:0;background:#fff;width:100%;height:100%}
+.stage.pc{display:block;overflow:hidden}
+.stage.pc iframe{position:absolute;left:0;top:0;width:1280px;transform-origin:0 0}
 .stage.phone{padding:16px 0}
 .stage.phone iframe{width:390px;height:calc(100% - 0px);border-radius:18px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
 .side{width:340px;background:#fff;border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
@@ -65,6 +68,20 @@ button,input,select{font:inherit}
 .status.ok{color:var(--ok)} .status.ng{color:var(--ng)}
 .loading{display:flex;align-items:center;justify-content:center;height:100%;color:var(--sub)}
 .sheet-btn{display:none}
+.seg{display:inline-flex;border:1.5px solid rgba(255,255,255,.4);border-radius:999px;overflow:hidden}
+.seg button{border:0;background:transparent;color:#fff;padding:6px 14px;font-size:13.5px;cursor:pointer;font-weight:600}
+.seg button.on{background:#fff;color:var(--brown)}
+.note2{font-size:12.5px;color:var(--sub);margin:4px 0 6px}
+.media{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:6px 8px;margin:6px 0}
+.media.on{border-color:var(--coral);background:#fff8f3}
+.media .th{width:52px;height:52px;flex:none;border-radius:8px;background:#f6f1ea;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.media .th img{max-width:100%;max-height:100%;object-fit:contain}
+.media .mb{flex:1;min-width:0;font-size:12.5px}
+.media .mn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.media .ops{display:flex;gap:12px;flex-wrap:wrap}
+.emo{font-size:30px;line-height:1}
+.pics{display:flex;align-items:center;gap:10px;margin:4px 0}
+.pics img{max-width:90px;max-height:70px;border-radius:6px;background:#f6f1ea;object-fit:contain}
 
 /* 確認のまど */
 .dlg{position:fixed;inset:0;background:rgba(40,30,24,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
@@ -122,14 +139,14 @@ button,input,select{font:inherit}
   <div class="top">
     <b>管理画面</b>
     <select id="pageSel" aria-label="直すページ"></select>
-    <button class="btn sub small wide" type="button" id="phoneBtn">スマホの見え方</button>
+    <span class="seg wide"><button type="button" id="viewPc" class="on">PCの見え方</button><button type="button" id="viewSp">スマホの見え方</button></span>
     <span class="sp"></span>
     <a class="btn sub small wide" id="liveLink" href="../" target="_blank" rel="noopener" style="text-decoration:none">公開ページを見る</a>
     <button class="btn sub small" type="button" id="lockBtn">とじる</button>
   </div>
-  <div class="help">直したい文字をクリック（スマホはタップ）すると、そのまま書きかえられます。改行は Enter。終わったら「公開する」を押します。</div>
+  <div class="help">直したい文字をクリック（スマホはタップ）すると、そのまま書きかえられます。改行は Enter。画像はクリックで差しかえ。終わったら「公開する」を押します。</div>
   <div class="main">
-    <div class="stage" id="stage"><div class="loading" id="loading">読みこみ中…</div></div>
+    <div class="stage pc" id="stage"><div class="loading" id="loading">読みこみ中…</div></div>
     <aside class="side" id="side">
       <h2>ページの名前と説明 <small style="font-weight:400;color:var(--sub)">（検索に出る文）</small></h2>
       <div class="scroll">
@@ -139,6 +156,9 @@ button,input,select{font:inherit}
           <label for="m-desc">説明</label>
           <textarea id="m-desc" rows="4"></textarea>
         </div>
+        <h2 style="padding:16px 0 0">画像・アイコン</h2>
+        <p class="note2">画像をクリックするか「差しかえる」で、自分の画像に変えられます。</p>
+        <div id="mediaList"></div>
         <h2 style="padding:16px 0 0">直したところ <span id="chgCount">0</span>か所</h2>
         <div id="chgList"><p class="empty">まだありません。</p></div>
       </div>
@@ -151,6 +171,8 @@ button,input,select{font:inherit}
     <button class="btn sheet-btn" type="button" id="sheetBtn">直したところ（<span id="chgCount2">0</span>）・公開</button>
   </div>
 </div>
+
+<input type="file" id="fileIn" accept="image/png,image/jpeg,image/webp,image/gif" class="hide">
 
 <!-- 確認のまど -->
 <div class="dlg hide" id="dlg">
@@ -295,20 +317,22 @@ function ask(title,html,yes,no){
 }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-/* ---------- ページの文字を見つける ---------- */
+/* ---------- ページの文字と画像を見つける ---------- */
 var ta=document.createElement('textarea');
 function decode(s){ if(s.indexOf('&')<0) return s; ta.innerHTML=s; return ta.value; }
 function encText(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function encAttr(s){ return encText(s).replace(/"/g,'&quot;'); }
+var EMOJI=/^(?:\p{Extended_Pictographic}|[️‍⃣]|\p{Emoji_Modifier})+$/u;
 
 function scan(src){
-  var segs=[], i=0, n=src.length, inBody=false, svg=0;
+  var items=[], i=0, n=src.length, inBody=false, svg=0;
   function push(a,b,kind){
     var raw=src.slice(a,b), lead=raw.match(/^[ \t\r\n]*/)[0].length, trail=raw.match(/[ \t\r\n]*$/)[0].length;
     if(lead+trail>=raw.length) return;
     var s=a+lead, e=b-trail;
     if(kind!=='title' && !inBody) return;
-    segs.push({s:s,e:e,raw:src.slice(s,e),orig:decode(src.slice(s,e)),wrap:!kind&&svg===0,kind:kind||'text'});
+    var t=decode(src.slice(s,e));
+    items.push({s:s,e:e,orig:t,kind:kind||'text',wrap:!kind&&svg===0,emoji:!kind&&svg===0&&EMOJI.test(t)});
   }
   while(i<n){
     if(src.startsWith('<!--',i)){ var ce=src.indexOf('-->',i+4); i=ce<0?n:ce+3; continue; }
@@ -316,9 +340,16 @@ function scan(src){
       var j=i+1, q=null;
       while(j<n){ var c=src[j]; if(q){ if(c===q) q=null; } else if(c==='"'||c==="'") q=c; else if(c==='>') break; j++; }
       var tag=src.slice(i,j+1), mm=/^<\/?\s*([A-Za-z0-9-]+)/.exec(tag), name=mm?mm[1].toLowerCase():'', closing=tag.charAt(1)==='/';
-      i=j+1;
+      var tagStart=i; i=j+1;
       if(name==='body'&&!closing) inBody=true;
       if(name==='svg'){ if(closing) svg=Math.max(0,svg-1); else if(!/\/\s*>$/.test(tag)) svg++; }
+      if(name==='img' && inBody && svg===0){
+        var sm=/\ssrc\s*=\s*"([^"]*)"/i.exec(tag);
+        if(sm && !/^(data:|https?:)/i.test(sm[1])){
+          var ss=tagStart+sm.index+sm[0].indexOf('"')+1, am=/\salt\s*=\s*"([^"]*)"/i.exec(tag);
+          items.push({s:ss,e:ss+sm[1].length,orig:decode(sm[1]),kind:'img',tagAt:tagStart+4,alt:am?decode(am[1]):''});
+        }
+      }
       if(!closing && /^(script|style|textarea|title)$/.test(name)){
         var re=new RegExp('</'+name+'\\s*>','ig'); re.lastIndex=i; var m2=re.exec(src), end=m2?m2.index:n;
         if(name==='title') push(i,end,'title');
@@ -329,7 +360,7 @@ function scan(src){
     var k=src.indexOf('<',i+1); if(k<0) k=n;
     push(i,k,null); i=k;
   }
-  return segs;
+  return items;
 }
 function findDesc(src){
   var re=/<meta\b[^>]*>/ig, m;
@@ -346,6 +377,7 @@ function findDesc(src){
 function openApp(){
   show('app');
   var sel=$('pageSel'); if(!sel.options.length){ PAGES.forEach(function(p){ var o=document.createElement('option'); o.value=p[0]; o.textContent=p[1]; sel.appendChild(o); }); }
+  if(window.innerWidth<=820) setView(true);
   loadPage(sel.value);
 }
 $('pageSel').addEventListener('change',function(){
@@ -354,11 +386,24 @@ $('pageSel').addEventListener('change',function(){
   sel.value=cur.path;
   ask('ページを変えますか？','<p>まだ公開していない直しは消えます。</p>','変える').then(function(y){ if(y){ sel.value=want; loadPage(want); } });
 });
-$('phoneBtn').addEventListener('click',function(){ var on=$('stage').classList.toggle('phone'); this.classList.toggle('on',on); });
+// PCの見え方：いつも幅1280のPCの形で作り、画面に合わせて縮めて見せる
+var PCW=1280;
+function fitFrame(){
+  var st=$('stage'), fr=st.querySelector('iframe'); if(!fr) return;
+  if(!st.classList.contains('pc')){ fr.style.transform=''; fr.style.height=''; return; }
+  var k=Math.min(1,st.clientWidth/PCW);
+  fr.style.transform='scale('+k+')'; fr.style.height=(st.clientHeight/k)+'px';
+}
+window.addEventListener('resize',fitFrame);
+function setView(sp){ $('stage').classList.toggle('pc',!sp); fitFrame(); $('stage').classList.toggle('phone',sp); $('viewPc').classList.toggle('on',!sp); $('viewSp').classList.toggle('on',sp); }
+$('viewPc').addEventListener('click',function(){ setView(false); });
+$('viewSp').addEventListener('click',function(){ setView(true); });
 $('sheetBtn').addEventListener('click',function(){ $('side').classList.add('open'); });
 document.addEventListener('click',function(e){ var sd=$('side'); if(sd.classList.contains('open') && !sd.contains(e.target) && e.target!==$('sheetBtn') && !$('sheetBtn').contains(e.target) && $('dlg').classList.contains('hide')) sd.classList.remove('open'); });
 
 function setStatus(t,cls){ var s=$('status'); s.textContent=t||''; s.className='status'+(cls?' '+cls:''); }
+function frameDoc(){ var fr=$('stage').querySelector('iframe'); return fr&&fr.contentDocument; }
+function elOf(id){ var d=frameDoc(); return d&&d.querySelector('[data-k="'+id+'"]'); }
 
 function loadPage(path){
   dirty=false; lastPub=null; $('undoPubBtn').classList.add('hide'); setStatus('');
@@ -370,40 +415,56 @@ function loadPage(path){
   });
 }
 
+// 公開したばかりの画像は、公開ページに出るまで手もとの絵を見せる
+var justUp={};
+
 function setup(path,f){
-  var src=f.text, segs=scan(src), desc=findDesc(src), title=null;
-  segs.forEach(function(g,i){ g.id=i; g.val=g.orig; if(g.kind==='title'&&!title) title=g; });
-  cur={path:path,sha:f.sha,src:src,segs:segs,desc:desc,title:title};
-  if(desc) desc.val=desc.orig;
-  $('m-title').value=title?title.orig:''; $('m-title').disabled=!title;
+  var src=f.text, items=scan(src), desc=findDesc(src);
+  if(desc) items.push(desc);
+  items.forEach(function(g,i){ g.id=i; g.val=g.orig; g.data=null; });
+  cur={path:path,sha:f.sha,src:src,items:items,
+    title:items.filter(function(g){return g.kind==='title';})[0]||null, desc:desc};
+  $('m-title').value=cur.title?cur.title.orig:''; $('m-title').disabled=!cur.title;
   $('m-desc').value=desc?desc.orig:''; $('m-desc').disabled=!desc;
 
-  // 見本：文字のまわりに目印をつけて、その場で書きかえられるようにする
-  var out=[], p=0;
-  segs.forEach(function(g){ if(!g.wrap) return; out.push(src.slice(p,g.s),'<span data-seg="'+g.id+'">',g.raw,'</span>'); p=g.e; });
-  out.push(src.slice(p));
+  // 見本：文字と画像に目印をつける（ページの飾りに当たらない、名前のない入れ物を使う）
+  var ins=[];
+  items.forEach(function(g){
+    if(g.wrap){ ins.push([g.s,'<omw-t data-k="'+g.id+'">']); ins.push([g.e,'</omw-t>']); }
+    if(g.kind==='img') ins.push([g.tagAt,' data-k="'+g.id+'"']);
+  });
+  ins.sort(function(a,b){ return a[0]-b[0]; });
+  var out=[], p=0; ins.forEach(function(x){ out.push(src.slice(p,x[0]),x[1]); p=x[0]; }); out.push(src.slice(p));
   var html=out.join('');
-  var css='<style>[data-seg]{outline:1px dashed transparent;outline-offset:2px;border-radius:3px;cursor:text}[data-seg]:hover{outline-color:#E2805A}[data-seg]:focus{outline:2px solid #E2805A;background:rgba(255,243,176,.6)}[data-seg].changed{background:rgba(255,243,176,.9)}</style>';
+  var css='<style>omw-t{outline:1px dashed transparent;outline-offset:2px;border-radius:3px;cursor:text}omw-t:hover{outline-color:#E2805A}omw-t:focus{outline:2px solid #E2805A;background:rgba(255,243,176,.6)}omw-t.changed{background:rgba(255,243,176,.9)}img[data-k]{cursor:pointer}img[data-k]:hover{outline:3px dashed #E2805A;outline-offset:-3px}img.changed{outline:3px solid #E2805A;outline-offset:-3px}</style>';
   html=html.replace(/<head\b[^>]*>/i,function(h){ return h+'<base href="../">'; }).replace(/<\/head>/i,css+'</head>');
 
   var fr=document.createElement('iframe'); fr.title='ページの見本';
   $('stage').innerHTML=''; $('stage').appendChild(fr);
   fr.addEventListener('load',function(){ wire(fr); },{once:true});
   fr.srcdoc=html;
+  fitFrame();
   refresh();
 }
 
-// 見本の文字を読む（改行は \n にする）
-function readSeg(el){ var s=''; el.childNodes.forEach(function(n){ s+= n.nodeName==='BR' ? '\n' : n.textContent; }); return s.replace(/​/g,''); }
-// ファイルに書く形（改行は <br>）
-function encSeg(g){ return g.kind==='desc' ? encAttr(g.val) : encText(g.val).replace(/\n/g,'<br>'); }
+// 見本の文字を読む（改行は \n。最後の改行は取る）
+function readSeg(el){ var s=''; el.childNodes.forEach(function(n){ s+= n.nodeName==='BR' ? '\n' : n.textContent; }); return s.replace(/​/g,'').replace(/\n+$/,''); }
+var ICON_STYLE='width:1.15em;height:1.15em;object-fit:contain;vertical-align:-.15em';
+// ファイルに書く形
+function encItem(g){
+  if(g.kind==='img') return encAttr(g.newPath||g.val);
+  if(g.data) return '<img src="'+encAttr(g.newPath)+'" alt="" style="'+ICON_STYLE+'">';
+  if(g.kind==='desc') return encAttr(g.val);
+  if(g.kind==='title') return encText(g.val);
+  return encText(g.val).replace(/\n/g,'<br>');
+}
 function showVal(s){ return esc(s).replace(/\n/g,'<span style="color:var(--coral)">↵</span><br>'); }
 var plainOK=(function(){ var d=document.createElement('div'); try{ d.contentEditable='plaintext-only'; }catch(e){ return false; } return d.contentEditable==='plaintext-only'; })();
 function wire(fr){
   var doc=fr.contentDocument; if(!doc) return;
-  doc.querySelectorAll('[data-seg]').forEach(function(el){
+  doc.querySelectorAll('omw-t[data-k]').forEach(function(el){
     el.contentEditable=plainOK?'plaintext-only':'true'; el.spellcheck=false;
-    var upd=function(){ var g=cur.segs[+el.dataset.seg]; g.val=readSeg(el); el.classList.toggle('changed',g.val!==g.orig); refresh(); };
+    var upd=function(){ var g=cur.items[+el.dataset.k]; if(g.data) return; g.val=readSeg(el); el.classList.toggle('changed',g.val!==g.orig); refresh(); };
     el.addEventListener('input',upd);
     // Enter で改行（日本語の変換中の Enter はそのまま）
     el.addEventListener('keydown',function(e){
@@ -419,10 +480,16 @@ function wire(fr){
     el.addEventListener('paste',function(e){ e.preventDefault(); var t=(e.clipboardData||window.clipboardData).getData('text/plain').replace(/[\r\n]+/g,' '); doc.execCommand('insertText',false,t); });
     el.addEventListener('drop',function(e){ e.preventDefault(); });
   });
+  doc.querySelectorAll('img[data-k]').forEach(function(im){
+    var g=cur.items[+im.dataset.k]; if(justUp[g.orig]) im.src=justUp[g.orig];
+  });
+  doc.querySelectorAll('omw-t img').forEach(function(im){ var a=im.getAttribute('src'); if(justUp[a]) im.src=justUp[a]; });
   // リンクやボタンを押しても、よそへ行かないようにする（スマホのメニューは開ける）
   doc.addEventListener('click',function(e){
     var t=e.target; if(!t.closest) return;
     if(t.closest('.menu-btn,.menu-shade')) return;
+    var im=t.closest('img[data-k]');
+    if(im){ e.preventDefault(); e.stopPropagation(); pickFor(cur.items[+im.dataset.k]); return; }
     if(t.closest('a,button,label,summary,.shot,form')){ e.preventDefault(); e.stopPropagation(); }
   },true);
   doc.addEventListener('submit',function(e){ e.preventDefault(); e.stopPropagation(); },true);
@@ -431,80 +498,130 @@ function wire(fr){
 $('m-title').addEventListener('input',function(){ if(cur&&cur.title){ cur.title.val=this.value; refresh(); } });
 $('m-desc').addEventListener('input',function(){ if(cur&&cur.desc){ cur.desc.val=this.value.replace(/[\r\n]+/g,' '); refresh(); } });
 
-function changes(){
-  if(!cur) return [];
-  var list=cur.segs.filter(function(g){ return g.val!==g.orig; });
-  if(cur.desc && cur.desc.val!==cur.desc.orig) list.push(cur.desc);
-  return list.sort(function(a,b){ return a.s-b.s; });
+/* ---------- 画像の差しかえ ---------- */
+var picking=null;
+function pickFor(g){ picking=g; var f=$('fileIn'); f.value=''; f.click(); }
+$('fileIn').addEventListener('change',function(){
+  var file=this.files&&this.files[0], g=picking; picking=null;
+  if(!file||!g) return;
+  setStatus('画像を準備しています…');
+  shrink(file, g.kind==='img'?1600:256).then(function(r){
+    g.data=r.data; g.ext=r.ext;
+    var el=elOf(g.id);
+    if(el){
+      if(g.kind==='img'){ el.src=r.data; el.classList.add('changed'); }
+      else { el.contentEditable='false'; el.innerHTML='<img alt="" style="'+ICON_STYLE+'">'; el.firstChild.src=r.data; el.classList.add('changed'); }
+    }
+    setStatus(''); refresh();
+  }).catch(function(){ setStatus('この画像は読みこめませんでした。PNG か JPG の画像でためしてください。','ng'); });
+});
+function shrink(file,max){
+  return createImageBitmap(file).then(function(bm){
+    var k=Math.min(1,max/Math.max(bm.width,bm.height)), w=Math.round(bm.width*k), h=Math.round(bm.height*k);
+    var c=document.createElement('canvas'); c.width=w; c.height=h; c.getContext('2d').drawImage(bm,0,0,w,h);
+    return new Promise(function(res){ c.toBlob(function(b){ res(b); },'image/webp',0.9); }).then(function(b){
+      if(b && b.type==='image/webp') return b;
+      return new Promise(function(res){ c.toBlob(res,'image/png'); });
+    });
+  }).then(function(b){
+    return new Promise(function(res,rej){ var fr=new FileReader(); fr.onload=function(){ res({data:fr.result,ext:b.type==='image/webp'?'webp':'png'}); }; fr.onerror=rej; fr.readAsDataURL(b); });
+  });
 }
-function label(g){ return g.kind==='title'?'ページの名前':g.kind==='desc'?'説明':''; }
+function mediaList(){ return cur?cur.items.filter(function(g){ return g.kind==='img'||g.emoji; }):[]; }
+function renderMedia(){
+  var box=$('mediaList'), list=mediaList();
+  if(!list.length){ box.innerHTML='<p class="empty">このページには差しかえられる画像がありません。</p>'; return; }
+  box.innerHTML=list.map(function(g){
+    var th= g.data ? '<img src="'+g.data+'" alt="">' : g.kind==='img' ? '<img src="../'+esc(g.orig)+'" alt="">' : '<span class="emo">'+esc(g.orig)+'</span>';
+    return '<div class="media'+(g.data?' on':'')+'"><div class="th">'+th+'</div><div class="mb"><div class="mn">'+esc(g.kind==='img'?(g.alt||'画像'):'アイコン')+(g.data?'<br><b style="color:var(--coral-d)">差しかえ予定</b>':'')+'</div>'+
+      '<div class="ops"><button class="link" data-pick="'+g.id+'">差しかえる</button><button class="link" data-go="'+g.id+'">場所を見る</button>'+(g.data?'<button class="link" data-back="'+g.id+'">元にもどす</button>':'')+'</div></div></div>';
+  }).join('');
+}
+
+/* ---------- 直したところ ---------- */
+function isChanged(g){ return !!g.data || g.val!==g.orig; }
+function changes(){ return cur?cur.items.filter(isChanged).sort(function(a,b){ return a.s-b.s; }):[]; }
+function label(g){ return g.kind==='title'?'ページの名前':g.kind==='desc'?'説明':(g.kind==='img'||g.data)?'画像':''; }
+function beforeAfter(g){
+  if(g.data){
+    var b= g.kind==='img' ? '<img src="../'+esc(g.orig)+'" alt="">' : '<span class="emo">'+esc(g.orig)+'</span>';
+    return '<div class="pics">'+b+'<span>→</span><img src="'+g.data+'" alt=""></div>';
+  }
+  return '<div class="b">'+showVal(g.orig)+'</div><div class="a">'+(g.val?showVal(g.val):'<span style="color:var(--ng)">（からっぽ）</span>')+'</div>';
+}
+function chgCard(g,ops){
+  var lb=label(g);
+  return '<div class="chg">'+(lb?'<div style="font-size:12px;color:var(--sub)">'+lb+'</div>':'')+beforeAfter(g)+
+    (ops?'<div class="ops">'+(g.wrap||g.kind==='img'?'<button class="link" data-go="'+g.id+'">場所を見る</button>':'')+'<button class="link" data-back="'+g.id+'">元にもどす</button></div>':'')+'</div>';
+}
 function refresh(){
   var list=changes(); dirty=list.length>0;
   $('chgCount').textContent=$('chgCount2').textContent=list.length;
   $('pubBtn').disabled=!dirty;
-  var box=$('chgList');
-  if(!list.length){ box.innerHTML='<p class="empty">まだありません。</p>'; return; }
-  box.innerHTML=list.map(function(g){
-    var lb=label(g);
-    return '<div class="chg">'+(lb?'<div style="font-size:12px;color:var(--sub)">'+lb+'</div>':'')+
-      '<div class="b">'+showVal(g.orig)+'</div><div class="a">'+(g.val?showVal(g.val):'<span style="color:var(--ng)">（からっぽ）</span>')+'</div>'+
-      '<div class="ops">'+(g.wrap?'<button class="link" data-go="'+g.id+'">場所を見る</button>':'')+'<button class="link" data-back="'+(g.kind==='desc'?'desc':g.id)+'">元にもどす</button></div></div>';
-  }).join('');
+  $('chgList').innerHTML=list.length?list.map(function(g){ return chgCard(g,true); }).join(''):'<p class="empty">まだありません。</p>';
+  renderMedia();
 }
-$('chgList').addEventListener('click',function(e){
+function onOps(e){
   var b=e.target.closest('button'); if(!b||!cur) return;
-  var fr=$('stage').querySelector('iframe'), doc=fr&&fr.contentDocument;
-  if(b.dataset.go!=null){ var el=doc&&doc.querySelector('[data-seg="'+b.dataset.go+'"]'); if(el){ el.scrollIntoView({block:'center',behavior:'smooth'}); el.focus(); $('side').classList.remove('open'); } return; }
+  if(b.dataset.pick!=null){ pickFor(cur.items[+b.dataset.pick]); return; }
+  if(b.dataset.go!=null){ var el=elOf(b.dataset.go); if(el){ el.scrollIntoView({block:'center',behavior:'smooth'}); if(el.focus) el.focus(); $('side').classList.remove('open'); } return; }
   if(b.dataset.back!=null){
-    if(b.dataset.back==='desc'){ cur.desc.val=cur.desc.orig; $('m-desc').value=cur.desc.orig; }
-    else { var g=cur.segs[+b.dataset.back]; g.val=g.orig; if(g.kind==='title') $('m-title').value=g.orig;
-      var el2=doc&&doc.querySelector('[data-seg="'+g.id+'"]'); if(el2){ el2.textContent=g.orig; el2.classList.remove('changed'); } }
-    refresh();
+    var g=cur.items[+b.dataset.back], el2=elOf(g.id);
+    g.val=g.orig;
+    if(g.kind==='title') $('m-title').value=g.orig;
+    if(g.kind==='desc') $('m-desc').value=g.orig;
+    if(el2){
+      if(g.kind==='img') el2.src=g.orig;
+      else { el2.textContent=g.orig; if(g.data) el2.contentEditable=plainOK?'plaintext-only':'true'; }
+      el2.classList.remove('changed');
+    }
+    g.data=null; refresh();
   }
-});
+}
+$('chgList').addEventListener('click',onOps);
+$('mediaList').addEventListener('click',onOps);
 
 function build(){
   var src=cur.src, out=[], p=0;
-  changes().forEach(function(g){ out.push(src.slice(p,g.s), encSeg(g)); p=g.e; });
+  changes().forEach(function(g){ out.push(src.slice(p,g.s), encItem(g)); p=g.e; });
   out.push(src.slice(p)); return out.join('');
-}
-
-// 公開したあと、文字の場所を新しい中身に合わせる
-function rebase(){
-  var all=cur.segs.slice(); if(cur.desc) all.push(cur.desc);
-  all.sort(function(a,b){ return a.s-b.s; });
-  var shift=0;
-  all.forEach(function(g){
-    var len=g.e-g.s; g.s+=shift;
-    if(g.val!==g.orig){ var nr=encSeg(g); g.e=g.s+nr.length; shift+=nr.length-len; g.raw=nr; g.orig=g.val; }
-    else g.e=g.s+len;
-  });
 }
 
 $('pubBtn').addEventListener('click',function(){
   var list=changes(); if(!list.length) return;
   var name=$('pageSel').selectedOptions[0].textContent;
-  var html='<p>「'+esc(name)+'」のページを、次のように直して公開します。</p>'+list.map(function(g){
-    return '<div class="chg">'+(label(g)?'<div style="font-size:12px;color:var(--sub)">'+label(g)+'</div>':'')+'<div class="b">'+showVal(g.orig)+'</div><div class="a">'+(g.val?showVal(g.val):'（からっぽ）')+'</div></div>';
-  }).join('')+'<p style="font-size:13px;color:var(--sub)">公開ページに出るまで1〜2分かかります。</p>';
+  var html='<p>「'+esc(name)+'」のページを、次のように直して公開します。</p>'+list.map(function(g){ return chgCard(g,false); }).join('')+
+    '<p style="font-size:13px;color:var(--sub)">公開ページに出るまで1〜2分かかります。</p>';
   ask('公開しますか？',html,'公開する').then(function(y){ if(y) publish(list,name); });
 });
 function publish(list,name){
-  var text=build(), prev={src:cur.src}, path=cur.path;
-  $('pubBtn').disabled=true; setStatus('公開しています…');
-  putFile(path,text,cur.sha,'管理画面で「'+name+'」の文言を直す（'+list.length+'か所）').then(function(j){
-    lastPub={path:path,src:prev.src,sha:j.content.sha,name:name};
-    // 新しい中身を「元」にして、続けて直せるようにする
-    cur.src=text; cur.sha=j.content.sha;
-    rebase();
-    var doc=$('stage').querySelector('iframe').contentDocument; if(doc) doc.querySelectorAll('.changed').forEach(function(el){ el.classList.remove('changed'); });
-    refresh(); $('undoPubBtn').classList.remove('hide');
-    setStatus('公開しました。1〜2分で公開ページに出ます。','ok');
-  }).catch(function(r){ setStatus(ghError(r&&r.status?r:null),'ng'); $('pubBtn').disabled=!dirty; });
+  var prev=cur.src, path=cur.path, pics=list.filter(function(g){ return g.data; });
+  $('pubBtn').disabled=true; setStatus(pics.length?'画像を送っています…':'公開しています…');
+  // 画像を先に img/up/ に入れる
+  var chain=Promise.resolve(), stamp=Date.now().toString(36);
+  pics.forEach(function(g,i){
+    chain=chain.then(function(){
+      g.newPath='img/up/'+stamp+'-'+(i+1)+'.'+g.ext;
+      return gh('/repos/'+OWNER+'/'+REPO+'/contents/'+g.newPath,{method:'PUT',body:{
+        message:'管理画面で「'+name+'」の画像を追加',content:g.data.split(',')[1],branch:BRANCH,committer:COMMITTER,author:COMMITTER
+      }}).then(function(r){ if(!r.ok) throw r; justUp[g.newPath]=g.data; });
+    });
+  });
+  chain.then(function(){
+    setStatus('公開しています…');
+    var text=build();
+    return putFile(path,text,cur.sha,'管理画面で「'+name+'」を直す（'+list.length+'か所）').then(function(j){
+      lastPub={path:path,src:prev,sha:j.content.sha,name:name};
+      // 新しい中身を「元」にして、続けて直せるようにする
+      setup(path,{text:text,sha:j.content.sha});
+      $('undoPubBtn').classList.remove('hide');
+      setStatus('公開しました。1〜2分で公開ページに出ます。','ok');
+    });
+  }).catch(function(r){ pics.forEach(function(g){ g.newPath=null; }); setStatus(ghError(r&&r.status?r:null),'ng'); $('pubBtn').disabled=!dirty; });
 }
 $('undoPubBtn').addEventListener('click',function(){
   if(!lastPub) return;
-  ask('取り消しますか？','<p>いま公開した直しを取り消して、その前の文にもどします。</p>','取り消す').then(function(y){
+  ask('取り消しますか？','<p>いま公開した直しを取り消して、その前の形にもどします。</p>','取り消す').then(function(y){
     if(!y) return; setStatus('取り消しています…');
     putFile(lastPub.path,lastPub.src,lastPub.sha,'管理画面で「'+lastPub.name+'」の直しを取り消す').then(function(){
       setStatus('取り消しました。','ok'); var p=lastPub.path; lastPub=null; loadPage(p);
