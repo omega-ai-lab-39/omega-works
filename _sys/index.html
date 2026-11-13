@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.github.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src 'self'; base-uri 'self'; form-action 'none'">
+<title>管理画面</title>
+<style>
+:root{--bg:#F3EEE7;--card:#fff;--ink:#3a302a;--sub:#7a6d63;--line:#e3d9cd;--coral:#E2805A;--coral-d:#C9673F;--brown:#4A3B32;--ok:#3f8a5a;--ng:#c0392b;--hl:#FFF3B0}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Hiragino Maru Gothic ProN","Kiwi Maru","Meiryo",system-ui,sans-serif;font-size:15px;line-height:1.6}
+button,input,select{font:inherit}
+.btn{border:0;border-radius:999px;padding:10px 20px;background:var(--coral);color:#fff;cursor:pointer;font-weight:600}
+.btn:hover{background:var(--coral-d)}
+.btn:disabled{background:#cbbfb3;cursor:default}
+.btn.sub{background:#fff;color:var(--brown);border:1.5px solid var(--line)}
+.btn.sub:hover{background:#faf6f1}
+.btn.small{padding:6px 14px;font-size:13.5px}
+.link{background:none;border:0;color:var(--coral-d);text-decoration:underline;cursor:pointer;padding:0;font-size:13.5px}
+.hide{display:none!important}
+
+/* 合言葉の画面 */
+.gate{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.gate .box{background:var(--card);border-radius:22px;padding:30px 26px;max-width:420px;width:100%;box-shadow:0 6px 30px rgba(74,59,50,.08)}
+.gate h1{font-size:20px;margin:0 0 4px;color:var(--brown)}
+.gate .lead{color:var(--sub);font-size:13.5px;margin:0 0 18px}
+.gate label{display:block;font-size:13.5px;font-weight:600;margin:14px 0 4px}
+.gate input{width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fffdfb}
+.gate input:focus{outline:2px solid var(--coral);border-color:transparent}
+.gate .row{margin-top:20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.gate .note{font-size:12.5px;color:var(--sub);margin:6px 0 0}
+.msg{font-size:13.5px;margin:12px 0 0;min-height:1.2em}
+.msg.ng{color:var(--ng)} .msg.ok{color:var(--ok)}
+
+/* 編集の画面 */
+.app{display:flex;flex-direction:column;height:100%}
+.top{background:var(--brown);color:#fff;display:flex;align-items:center;gap:10px;padding:8px 14px;flex-wrap:wrap}
+.top b{font-size:15px;margin-right:6px}
+.top select{padding:7px 10px;border-radius:10px;border:0;max-width:220px}
+.top .sp{flex:1}
+.top .btn.sub{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+.top .btn.sub:hover{background:rgba(255,255,255,.1)}
+.top .btn.sub.on{background:#fff;color:var(--brown)}
+.help{background:#FFF8E6;border-bottom:1px solid #f0e2bd;font-size:13px;padding:7px 14px;color:#6b5a2e}
+.main{flex:1;display:flex;min-height:0}
+.stage{flex:1;overflow:auto;display:flex;justify-content:center;background:#e9e2d8}
+.stage iframe{border:0;background:#fff;width:100%;height:100%}
+.stage.phone{padding:16px 0}
+.stage.phone iframe{width:390px;height:calc(100% - 0px);border-radius:18px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.side{width:340px;background:#fff;border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.side h2{font-size:15px;margin:0;padding:14px 16px 6px;color:var(--brown)}
+.side .scroll{flex:1;overflow:auto;padding:0 16px 12px}
+.side .foot{border-top:1px solid var(--line);padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+.meta label{display:block;font-size:12.5px;color:var(--sub);margin:10px 0 3px}
+.meta input,.meta textarea{width:100%;padding:8px 10px;border:1.5px solid var(--line);border-radius:10px;font:inherit;font-size:13.5px;resize:vertical}
+.chg{border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin:8px 0;font-size:13px}
+.chg .b{color:var(--sub);text-decoration:line-through;word-break:break-all}
+.chg .a{color:var(--ink);word-break:break-all;font-weight:600}
+.chg .ops{display:flex;gap:12px;margin-top:4px}
+.empty{color:var(--sub);font-size:13px;padding:6px 0}
+.status{font-size:13px;color:var(--sub)}
+.status.ok{color:var(--ok)} .status.ng{color:var(--ng)}
+.loading{display:flex;align-items:center;justify-content:center;height:100%;color:var(--sub)}
+.sheet-btn{display:none}
+
+/* 確認のまど */
+.dlg{position:fixed;inset:0;background:rgba(40,30,24,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.dlg .box{background:#fff;border-radius:18px;max-width:520px;width:100%;max-height:85vh;display:flex;flex-direction:column}
+.dlg h3{margin:0;padding:18px 20px 6px;font-size:17px;color:var(--brown)}
+.dlg .body{overflow:auto;padding:0 20px;font-size:14px}
+.dlg .row{display:flex;gap:10px;justify-content:flex-end;padding:14px 20px 18px;flex-wrap:wrap}
+
+@media (max-width:820px){
+  .side{position:fixed;left:0;right:0;bottom:0;width:auto;max-height:70vh;border-left:0;border-top:1px solid var(--line);border-radius:18px 18px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.12);transform:translateY(calc(100% - 0px));transition:transform .25s;z-index:20}
+  .side.open{transform:none}
+  .sheet-btn{display:block;position:fixed;right:14px;bottom:14px;z-index:21;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+  .side.open ~ .sheet-btn{display:none}
+  .top select{max-width:160px}
+  .top .wide{display:none}
+  .stage.phone iframe{width:100%;border-radius:0;box-shadow:none}
+  .stage.phone{padding:0}
+}
+</style>
+</head>
+<body>
+
+<!-- 合言葉：はじめての機械 -->
+<div class="gate hide" id="setup">
+  <form class="box" id="setupForm" autocomplete="off">
+    <h1>管理画面のはじめての設定</h1>
+    <p class="lead">この機械（パソコン・スマホ）で使うのは、はじめてです。<br>合言葉を決めて、GitHubの鍵を入れてください。鍵は合言葉でかくして、この機械の中にだけ置きます。</p>
+    <label for="s-pw1">合言葉（8文字以上）</label>
+    <input type="password" id="s-pw1" minlength="8" required autocomplete="new-password">
+    <label for="s-pw2">合言葉（もう一度）</label>
+    <input type="password" id="s-pw2" minlength="8" required autocomplete="new-password">
+    <label for="s-tok">GitHubの鍵</label>
+    <input type="password" id="s-tok" required autocomplete="off" spellcheck="false" placeholder="github_pat_ で始まる長い文字">
+    <p class="note">鍵は omega-works だけに使える小さいものを使います。作り方は使い方ページを見てください。</p>
+    <div class="row"><button class="btn" type="submit" id="setupBtn">設定する</button></div>
+    <p class="msg" id="setupMsg" role="status"></p>
+  </form>
+</div>
+
+<!-- 合言葉：2回目から -->
+<div class="gate hide" id="login">
+  <form class="box" id="loginForm" autocomplete="off">
+    <h1>管理画面</h1>
+    <p class="lead">合言葉を入れてください。</p>
+    <label for="l-pw">合言葉</label>
+    <input type="password" id="l-pw" required autocomplete="current-password">
+    <div class="row"><button class="btn" type="submit" id="loginBtn">入る</button></div>
+    <p class="msg" id="loginMsg" role="status"></p>
+    <p class="note" style="margin-top:22px">鍵の期限が切れた・合言葉を忘れたときは<br><button type="button" class="link" id="resetBtn">この機械の鍵を消して、設定しなおす</button></p>
+  </form>
+</div>
+
+<!-- 編集 -->
+<div class="app hide" id="app">
+  <div class="top">
+    <b>管理画面</b>
+    <select id="pageSel" aria-label="直すページ"></select>
+    <button class="btn sub small wide" type="button" id="phoneBtn">スマホの見え方</button>
+    <span class="sp"></span>
+    <a class="btn sub small wide" id="liveLink" href="../" target="_blank" rel="noopener" style="text-decoration:none">公開ページを見る</a>
+    <button class="btn sub small" type="button" id="lockBtn">とじる</button>
+  </div>
+  <div class="help">直したい文字をクリック（スマホはタップ）すると、そのまま書きかえられます。終わったら「公開する」を押します。</div>
+  <div class="main">
+    <div class="stage" id="stage"><div class="loading" id="loading">読みこみ中…</div></div>
+    <aside class="side" id="side">
+      <h2>ページの名前と説明 <small style="font-weight:400;color:var(--sub)">（検索に出る文）</small></h2>
+      <div class="scroll">
+        <div class="meta">
+          <label for="m-title">ページの名前</label>
+          <input id="m-title">
+          <label for="m-desc">説明</label>
+          <textarea id="m-desc" rows="4"></textarea>
+        </div>
+        <h2 style="padding:16px 0 0">直したところ <span id="chgCount">0</span>か所</h2>
+        <div id="chgList"><p class="empty">まだありません。</p></div>
+      </div>
+      <div class="foot">
+        <button class="btn" type="button" id="pubBtn" disabled>公開する</button>
+        <button class="btn sub small" type="button" id="undoPubBtn" style="">いま公開した分を取り消す</button>
+        <div class="status" id="status" role="status"></div>
+      </div>
+    </aside>
+    <button class="btn sheet-btn" type="button" id="sheetBtn">直したところ（<span id="chgCount2">0</span>）・公開</button>
+  </div>
+</div>
+
+<!-- 確認のまど -->
+<div class="dlg hide" id="dlg">
+  <div class="box">
+    <h3 id="dlgTitle"></h3>
+    <div class="body" id="dlgBody"></div>
+    <div class="row"><button class="btn sub" type="button" id="dlgNo">やめる</button><button class="btn" type="button" id="dlgYes">はい</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var OWNER='omega-ai-lab-39', REPO='omega-works', BRANCH='main';
+var LOCAL=/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+var API=LOCAL ? '/__mockapi' : 'https://api.github.com';
+var COMMITTER={name:'omega-ai-lab-39',email:'omega-ai-lab-39@users.noreply.github.com'};
+var STORE='omw-sys-key-v1';
+// 直せるページ（暗号にしてあるページと、職務のページは入れない）
+var PAGES=[
+  ['index.html','トップ'],
+  ['jigyo.html','事業内容'],
+  ['works.html','制作事例'],
+  ['sns.html','SNS代行（入口）'],
+  ['sns-shop.html','SNS代行（お店・会社）']
+];
+
+var $=function(id){return document.getElementById(id);};
+var token=null, cur=null, lastPub=null, dirty=false;
+
+/* ---------- 保存（localStorage は使えないこともある） ---------- */
+function loadKey(){ try{ var s=localStorage.getItem(STORE); return s?JSON.parse(s):null; }catch(e){ return null; } }
+function saveKey(o){ try{ localStorage.setItem(STORE,JSON.stringify(o)); return true; }catch(e){ return false; } }
+function dropKey(){ try{ localStorage.removeItem(STORE); }catch(e){} }
+
+/* ---------- 合言葉で鍵をかくす（PBKDF2 + AES-GCM） ---------- */
+var enc=new TextEncoder(), dec=new TextDecoder();
+function b64(u8){ var s=''; for(var i=0;i<u8.length;i+=0x8000) s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000)); return btoa(s); }
+function unb64(s){ var b=atob(s), u=new Uint8Array(b.length); for(var i=0;i<b.length;i++) u[i]=b.charCodeAt(i); return u; }
+function derive(pw,salt){
+  return crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']).then(function(k){
+    return crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:310000,hash:'SHA-256'},k,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+  });
+}
+function lock(pw,text){
+  var salt=crypto.getRandomValues(new Uint8Array(16)), iv=crypto.getRandomValues(new Uint8Array(12));
+  return derive(pw,salt).then(function(k){ return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,enc.encode(text)); })
+    .then(function(ct){ return {salt:b64(salt),iv:b64(iv),ct:b64(new Uint8Array(ct))}; });
+}
+function unlock(pw,o){
+  return derive(pw,unb64(o.salt)).then(function(k){ return crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(o.iv)},k,unb64(o.ct)); })
+    .then(function(pt){ return dec.decode(pt); });
+}
+
+/* ---------- GitHub ---------- */
+function gh(path,opt){
+  opt=opt||{};
+  var h={'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28'};
+  if(opt.body) h['Content-Type']='application/json';
+  return fetch(API+path,{method:opt.method||'GET',headers:h,body:opt.body?JSON.stringify(opt.body):undefined,cache:'no-store'})
+    .then(function(r){ return r.text().then(function(t){ var j=null; try{ j=t?JSON.parse(t):null; }catch(e){} return {ok:r.ok,status:r.status,json:j}; }); });
+}
+function ghError(r){
+  if(!r) return 'GitHubにつながりませんでした。ネットのつながりを確かめてください。';
+  if(r.status===401) return 'GitHubの鍵が使えません（期限切れ・まちがい）。「この機械の鍵を消して、設定しなおす」から入れなおしてください。';
+  if(r.status===403||r.status===404) return 'この鍵では omega-works を見たり書いたりできないようです。鍵の設定（omega-works を選ぶ・「Contents」を「Read and write」）を確かめてください。';
+  if(r.status===409||r.status===422) return 'ほかの所でこのページが直されたようです。いったんページを選びなおして、読みこみなおしてください。';
+  return 'うまくいきませんでした（番号 '+r.status+'）。少し待ってもう一度ためしてください。';
+}
+function getFile(path){
+  return gh('/repos/'+OWNER+'/'+REPO+'/contents/'+path+'?ref='+BRANCH).then(function(r){
+    if(!r.ok) throw r;
+    var bytes=unb64(r.json.content.replace(/\s/g,''));
+    return {sha:r.json.sha,text:dec.decode(bytes)};
+  });
+}
+function putFile(path,text,sha,message){
+  return gh('/repos/'+OWNER+'/'+REPO+'/contents/'+path,{method:'PUT',body:{
+    message:message,content:b64(enc.encode(text)),sha:sha,branch:BRANCH,committer:COMMITTER,author:COMMITTER
+  }}).then(function(r){ if(!r.ok) throw r; return r.json; });
+}
+
+/* ---------- 画面の切りかえ ---------- */
+function show(id){ ['setup','login','app'].forEach(function(x){ $(x).classList.toggle('hide',x!==id); }); }
+function start(){
+  if(!window.crypto||!crypto.subtle){ show('login'); $('loginMsg').className='msg ng'; $('loginMsg').textContent='このブラウザでは使えません。新しいブラウザ（Chrome・Safari など）で開いてください。'; return; }
+  if(loadKey()){ show('login'); setTimeout(function(){ $('l-pw').focus(); },50); }
+  else { show('setup'); setTimeout(function(){ $('s-pw1').focus(); },50); }
+}
+
+$('setupForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var m=$('setupMsg'), p1=$('s-pw1').value, p2=$('s-pw2').value, t=$('s-tok').value.trim();
+  m.className='msg ng';
+  if(p1.length<8){ m.textContent='合言葉は8文字以上にしてください。'; return; }
+  if(p1!==p2){ m.textContent='2回の合言葉がちがいます。'; return; }
+  if(!t){ m.textContent='GitHubの鍵を入れてください。'; return; }
+  m.className='msg'; m.textContent='鍵を確かめています…'; $('setupBtn').disabled=true;
+  token=t;
+  getFile('index.html').then(function(){
+    return lock(p1,t);
+  }).then(function(o){
+    var stored=saveKey(o);
+    $('s-pw1').value=$('s-pw2').value=$('s-tok').value='';
+    if(!stored){ m.className='msg ng'; m.textContent='この機械には鍵を置けませんでした（記録を残さない設定のようです）。今回だけ使えます。'; }
+    openApp();
+  }).catch(function(r){ token=null; m.className='msg ng'; m.textContent=ghError(r&&r.status?r:null); })
+    .then(function(){ $('setupBtn').disabled=false; });
+});
+
+$('loginForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var m=$('loginMsg'), o=loadKey();
+  if(!o){ start(); return; }
+  m.className='msg'; m.textContent='開いています…'; $('loginBtn').disabled=true;
+  unlock($('l-pw').value,o).then(function(t){
+    token=t; $('l-pw').value=''; m.textContent=''; openApp();
+  }).catch(function(){
+    m.className='msg ng'; m.textContent='合言葉がちがうようです。';
+  }).then(function(){ $('loginBtn').disabled=false; });
+});
+
+$('resetBtn').addEventListener('click',function(){
+  ask('この機械の鍵を消しますか？','<p>この機械に置いてあるGitHubの鍵を消して、はじめての設定にもどります。公開ページはそのままです。</p>','消す').then(function(yes){
+    if(!yes) return; dropKey(); token=null; start();
+  });
+});
+$('lockBtn').addEventListener('click',function(){
+  var go=function(){ token=null; cur=null; dirty=false; $('stage').innerHTML='<div class="loading" id="loading">読みこみ中…</div>'; start(); };
+  if(dirty) ask('とじますか？','<p>まだ公開していない直しは消えます。</p>','とじる').then(function(y){ if(y) go(); }); else go();
+});
+window.addEventListener('beforeunload',function(e){ if(dirty){ e.preventDefault(); e.returnValue=''; } });
+
+/* ---------- 確認のまど ---------- */
+function ask(title,html,yes,no){
+  $('dlgTitle').textContent=title; $('dlgBody').innerHTML=html; $('dlgYes').textContent=yes||'はい'; $('dlgNo').textContent=no||'やめる';
+  $('dlg').classList.remove('hide');
+  return new Promise(function(res){
+    function done(v){ $('dlg').classList.add('hide'); $('dlgYes').onclick=$('dlgNo').onclick=null; res(v); }
+    $('dlgYes').onclick=function(){ done(true); }; $('dlgNo').onclick=function(){ done(false); };
+  });
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ---------- ページの文字を見つける ---------- */
+var ta=document.createElement('textarea');
+function decode(s){ if(s.indexOf('&')<0) return s; ta.innerHTML=s; return ta.value; }
+function encText(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function encAttr(s){ return encText(s).replace(/"/g,'&quot;'); }
+
+function scan(src){
+  var segs=[], i=0, n=src.length, inBody=false, svg=0;
+  function push(a,b,kind){
+    var raw=src.slice(a,b), lead=raw.match(/^[ \t\r\n]*/)[0].length, trail=raw.match(/[ \t\r\n]*$/)[0].length;
+    if(lead+trail>=raw.length) return;
+    var s=a+lead, e=b-trail;
+    if(kind!=='title' && !inBody) return;
+    segs.push({s:s,e:e,raw:src.slice(s,e),orig:decode(src.slice(s,e)),wrap:!kind&&svg===0,kind:kind||'text'});
+  }
+  while(i<n){
+    if(src.startsWith('<!--',i)){ var ce=src.indexOf('-->',i+4); i=ce<0?n:ce+3; continue; }
+    if(src[i]==='<' && /[A-Za-z\/!?]/.test(src[i+1]||'')){
+      var j=i+1, q=null;
+      while(j<n){ var c=src[j]; if(q){ if(c===q) q=null; } else if(c==='"'||c==="'") q=c; else if(c==='>') break; j++; }
+      var tag=src.slice(i,j+1), mm=/^<\/?\s*([A-Za-z0-9-]+)/.exec(tag), name=mm?mm[1].toLowerCase():'', closing=tag.charAt(1)==='/';
+      i=j+1;
+      if(name==='body'&&!closing) inBody=true;
+      if(name==='svg'){ if(closing) svg=Math.max(0,svg-1); else if(!/\/\s*>$/.test(tag)) svg++; }
+      if(!closing && /^(script|style|textarea|title)$/.test(name)){
+        var re=new RegExp('</'+name+'\\s*>','ig'); re.lastIndex=i; var m2=re.exec(src), end=m2?m2.index:n;
+        if(name==='title') push(i,end,'title');
+        i=m2?m2.index+m2[0].length:n; continue;
+      }
+      continue;
+    }
+    var k=src.indexOf('<',i+1); if(k<0) k=n;
+    push(i,k,null); i=k;
+  }
+  return segs;
+}
+function findDesc(src){
+  var re=/<meta\b[^>]*>/ig, m;
+  while((m=re.exec(src))){
+    if(!/\bname\s*=\s*["']description["']/i.test(m[0])) continue;
+    var c=/\bcontent\s*=\s*"([^"]*)"/i.exec(m[0]); if(!c) return null;
+    var s=m.index+c.index+c[0].indexOf('"')+1;
+    return {s:s,e:s+c[1].length,orig:decode(c[1]),kind:'desc'};
+  }
+  return null;
+}
+
+/* ---------- 編集 ---------- */
+function openApp(){
+  show('app');
+  var sel=$('pageSel'); if(!sel.options.length){ PAGES.forEach(function(p){ var o=document.createElement('option'); o.value=p[0]; o.textContent=p[1]; sel.appendChild(o); }); }
+  loadPage(sel.value);
+}
+$('pageSel').addEventListener('change',function(){
+  var sel=this, want=sel.value;
+  if(!dirty){ loadPage(want); return; }
+  sel.value=cur.path;
+  ask('ページを変えますか？','<p>まだ公開していない直しは消えます。</p>','変える').then(function(y){ if(y){ sel.value=want; loadPage(want); } });
+});
+$('phoneBtn').addEventListener('click',function(){ var on=$('stage').classList.toggle('phone'); this.classList.toggle('on',on); });
+$('sheetBtn').addEventListener('click',function(){ $('side').classList.add('open'); });
+document.addEventListener('click',function(e){ var sd=$('side'); if(sd.classList.contains('open') && !sd.contains(e.target) && e.target!==$('sheetBtn') && !$('sheetBtn').contains(e.target) && $('dlg').classList.contains('hide')) sd.classList.remove('open'); });
+
+function setStatus(t,cls){ var s=$('status'); s.textContent=t||''; s.className='status'+(cls?' '+cls:''); }
+
+function loadPage(path){
+  dirty=false; lastPub=null; $('undoPubBtn').classList.add('hide'); setStatus('');
+  $('liveLink').href='../'+(path==='index.html'?'':path);
+  $('stage').innerHTML='<div class="loading">読みこみ中…</div>';
+  getFile(path).then(function(f){ setup(path,f); }).catch(function(r){
+    $('stage').innerHTML='<div class="loading" style="padding:20px;text-align:center"></div>';
+    $('stage').firstChild.textContent=ghError(r&&r.status?r:null);
+  });
+}
+
+function setup(path,f){
+  var src=f.text, segs=scan(src), desc=findDesc(src), title=null;
+  segs.forEach(function(g,i){ g.id=i; g.val=g.orig; if(g.kind==='title'&&!title) title=g; });
+  cur={path:path,sha:f.sha,src:src,segs:segs,desc:desc,title:title};
+  if(desc) desc.val=desc.orig;
+  $('m-title').value=title?title.orig:''; $('m-title').disabled=!title;
+  $('m-desc').value=desc?desc.orig:''; $('m-desc').disabled=!desc;
+
+  // 見本：文字のまわりに目印をつけて、その場で書きかえられるようにする
+  var out=[], p=0;
+  segs.forEach(function(g){ if(!g.wrap) return; out.push(src.slice(p,g.s),'<span data-seg="'+g.id+'">',g.raw,'</span>'); p=g.e; });
+  out.push(src.slice(p));
+  var html=out.join('');
+  var css='<style>[data-seg]{outline:1px dashed transparent;outline-offset:2px;border-radius:3px;cursor:text}[data-seg]:hover{outline-color:#E2805A}[data-seg]:focus{outline:2px solid #E2805A;background:rgba(255,243,176,.6)}[data-seg].changed{background:rgba(255,243,176,.9)}</style>';
+  html=html.replace(/<head\b[^>]*>/i,function(h){ return h+'<base href="../">'; }).replace(/<\/head>/i,css+'</head>');
+
+  var fr=document.createElement('iframe'); fr.title='ページの見本';
+  $('stage').innerHTML=''; $('stage').appendChild(fr);
+  fr.addEventListener('load',function(){ wire(fr); },{once:true});
+  fr.srcdoc=html;
+  refresh();
+}
+
+var plainOK=(function(){ var d=document.createElement('div'); try{ d.contentEditable='plaintext-only'; }catch(e){ return false; } return d.contentEditable==='plaintext-only'; })();
+function wire(fr){
+  var doc=fr.contentDocument; if(!doc) return;
+  doc.querySelectorAll('[data-seg]').forEach(function(el){
+    el.contentEditable=plainOK?'plaintext-only':'true'; el.spellcheck=false;
+    el.addEventListener('input',function(){ var g=cur.segs[+el.dataset.seg]; g.val=el.textContent; el.classList.toggle('changed',g.val!==g.orig); refresh(); });
+    el.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); el.blur(); } });
+    el.addEventListener('paste',function(e){ e.preventDefault(); var t=(e.clipboardData||window.clipboardData).getData('text/plain').replace(/[\r\n]+/g,' '); doc.execCommand('insertText',false,t); });
+    el.addEventListener('drop',function(e){ e.preventDefault(); });
+  });
+  // リンクやボタンを押しても、よそへ行かないようにする（スマホのメニューは開ける）
+  doc.addEventListener('click',function(e){
+    var t=e.target; if(!t.closest) return;
+    if(t.closest('.menu-btn,.menu-shade')) return;
+    if(t.closest('a,button,label,summary,.shot,form')){ e.preventDefault(); e.stopPropagation(); }
+  },true);
+  doc.addEventListener('submit',function(e){ e.preventDefault(); e.stopPropagation(); },true);
+}
+
+$('m-title').addEventListener('input',function(){ if(cur&&cur.title){ cur.title.val=this.value; refresh(); } });
+$('m-desc').addEventListener('input',function(){ if(cur&&cur.desc){ cur.desc.val=this.value.replace(/[\r\n]+/g,' '); refresh(); } });
+
+function changes(){
+  if(!cur) return [];
+  var list=cur.segs.filter(function(g){ return g.val!==g.orig; });
+  if(cur.desc && cur.desc.val!==cur.desc.orig) list.push(cur.desc);
+  return list.sort(function(a,b){ return a.s-b.s; });
+}
+function label(g){ return g.kind==='title'?'ページの名前':g.kind==='desc'?'説明':''; }
+function refresh(){
+  var list=changes(); dirty=list.length>0;
+  $('chgCount').textContent=$('chgCount2').textContent=list.length;
+  $('pubBtn').disabled=!dirty;
+  var box=$('chgList');
+  if(!list.length){ box.innerHTML='<p class="empty">まだありません。</p>'; return; }
+  box.innerHTML=list.map(function(g){
+    var lb=label(g);
+    return '<div class="chg">'+(lb?'<div style="font-size:12px;color:var(--sub)">'+lb+'</div>':'')+
+      '<div class="b">'+esc(g.orig)+'</div><div class="a">'+(g.val?esc(g.val):'<span style="color:var(--ng)">（からっぽ）</span>')+'</div>'+
+      '<div class="ops">'+(g.wrap?'<button class="link" data-go="'+g.id+'">場所を見る</button>':'')+'<button class="link" data-back="'+(g.kind==='desc'?'desc':g.id)+'">元にもどす</button></div></div>';
+  }).join('');
+}
+$('chgList').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b||!cur) return;
+  var fr=$('stage').querySelector('iframe'), doc=fr&&fr.contentDocument;
+  if(b.dataset.go!=null){ var el=doc&&doc.querySelector('[data-seg="'+b.dataset.go+'"]'); if(el){ el.scrollIntoView({block:'center',behavior:'smooth'}); el.focus(); $('side').classList.remove('open'); } return; }
+  if(b.dataset.back!=null){
+    if(b.dataset.back==='desc'){ cur.desc.val=cur.desc.orig; $('m-desc').value=cur.desc.orig; }
+    else { var g=cur.segs[+b.dataset.back]; g.val=g.orig; if(g.kind==='title') $('m-title').value=g.orig;
+      var el2=doc&&doc.querySelector('[data-seg="'+g.id+'"]'); if(el2){ el2.textContent=g.orig; el2.classList.remove('changed'); } }
+    refresh();
+  }
+});
+
+function build(){
+  var src=cur.src, out=[], p=0;
+  changes().forEach(function(g){ out.push(src.slice(p,g.s), g.kind==='desc'?encAttr(g.val):encText(g.val)); p=g.e; });
+  out.push(src.slice(p)); return out.join('');
+}
+
+// 公開したあと、文字の場所を新しい中身に合わせる
+function rebase(){
+  var all=cur.segs.slice(); if(cur.desc) all.push(cur.desc);
+  all.sort(function(a,b){ return a.s-b.s; });
+  var shift=0;
+  all.forEach(function(g){
+    var len=g.e-g.s; g.s+=shift;
+    if(g.val!==g.orig){ var nr=g.kind==='desc'?encAttr(g.val):encText(g.val); g.e=g.s+nr.length; shift+=nr.length-len; g.raw=nr; g.orig=g.val; }
+    else g.e=g.s+len;
+  });
+}
+
+$('pubBtn').addEventListener('click',function(){
+  var list=changes(); if(!list.length) return;
+  var name=$('pageSel').selectedOptions[0].textContent;
+  var html='<p>「'+esc(name)+'」のページを、次のように直して公開します。</p>'+list.map(function(g){
+    return '<div class="chg">'+(label(g)?'<div style="font-size:12px;color:var(--sub)">'+label(g)+'</div>':'')+'<div class="b">'+esc(g.orig)+'</div><div class="a">'+(g.val?esc(g.val):'（からっぽ）')+'</div></div>';
+  }).join('')+'<p style="font-size:13px;color:var(--sub)">公開ページに出るまで1〜2分かかります。</p>';
+  ask('公開しますか？',html,'公開する').then(function(y){ if(y) publish(list,name); });
+});
+function publish(list,name){
+  var text=build(), prev={src:cur.src}, path=cur.path;
+  $('pubBtn').disabled=true; setStatus('公開しています…');
+  putFile(path,text,cur.sha,'管理画面で「'+name+'」の文言を直す（'+list.length+'か所）').then(function(j){
+    lastPub={path:path,src:prev.src,sha:j.content.sha,name:name};
+    // 新しい中身を「元」にして、続けて直せるようにする
+    cur.src=text; cur.sha=j.content.sha;
+    rebase();
+    var doc=$('stage').querySelector('iframe').contentDocument; if(doc) doc.querySelectorAll('.changed').forEach(function(el){ el.classList.remove('changed'); });
+    refresh(); $('undoPubBtn').classList.remove('hide');
+    setStatus('公開しました。1〜2分で公開ページに出ます。','ok');
+  }).catch(function(r){ setStatus(ghError(r&&r.status?r:null),'ng'); $('pubBtn').disabled=!dirty; });
+}
+$('undoPubBtn').addEventListener('click',function(){
+  if(!lastPub) return;
+  ask('取り消しますか？','<p>いま公開した直しを取り消して、その前の文にもどします。</p>','取り消す').then(function(y){
+    if(!y) return; setStatus('取り消しています…');
+    putFile(lastPub.path,lastPub.src,lastPub.sha,'管理画面で「'+lastPub.name+'」の直しを取り消す').then(function(){
+      setStatus('取り消しました。','ok'); var p=lastPub.path; lastPub=null; loadPage(p);
+    }).catch(function(r){ setStatus(ghError(r&&r.status?r:null),'ng'); });
+  });
+});
+
+start();
+})();
+</script>
+</body>
+</html>
