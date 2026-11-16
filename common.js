@@ -63,7 +63,7 @@
   window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 
   // 画面写真を押すと拡大
-  var shots=document.querySelectorAll('.work .shot img');
+  var shots=document.querySelectorAll('.work .shot img:not(.emo)');
   if(!shots.length) return;
   var box=document.createElement('div');
   box.className='zoom'; box.setAttribute('role','dialog'); box.setAttribute('aria-modal','true'); box.setAttribute('aria-label','画面写真の拡大');

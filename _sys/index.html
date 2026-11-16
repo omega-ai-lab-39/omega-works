@@ -347,7 +347,7 @@ function scan(src){
         var sm=/\ssrc\s*=\s*"([^"]*)"/i.exec(tag);
         if(sm && !/^(data:|https?:)/i.test(sm[1])){
           var ss=tagStart+sm.index+sm[0].indexOf('"')+1, am=/\salt\s*=\s*"([^"]*)"/i.exec(tag);
-          items.push({s:ss,e:ss+sm[1].length,orig:decode(sm[1]),kind:'img',tagAt:tagStart+4,alt:am?decode(am[1]):''});
+          items.push({s:ss,e:ss+sm[1].length,orig:decode(sm[1]),kind:'img',tagAt:tagStart+4,alt:am?decode(am[1]):'',icon:/\sclass\s*=\s*"(?:[^"]*\s)?emo[ "]/i.test(tag)});
         }
       }
       if(!closing && /^(script|style|textarea|title)$/.test(name)){
@@ -449,11 +449,11 @@ function setup(path,f){
 
 // 見本の文字を読む（改行は \n。最後の改行は取る）
 function readSeg(el){ var s=''; el.childNodes.forEach(function(n){ s+= n.nodeName==='BR' ? '\n' : n.textContent; }); return s.replace(/​/g,'').replace(/\n+$/,''); }
-var ICON_STYLE='width:1.15em;height:1.15em;object-fit:contain;vertical-align:-.15em';
+var ICON_STYLE='display:inline-block;width:1.2em;height:1.2em;max-width:none;object-fit:contain;vertical-align:-.2em';
 // ファイルに書く形
 function encItem(g){
   if(g.kind==='img') return encAttr(g.newPath||g.val);
-  if(g.data) return '<img src="'+encAttr(g.newPath)+'" alt="" style="'+ICON_STYLE+'">';
+  if(g.data) return '<img class="emo" src="'+encAttr(g.newPath)+'" alt="">';
   if(g.kind==='desc') return encAttr(g.val);
   if(g.kind==='title') return encText(g.val);
   return encText(g.val).replace(/\n/g,'<br>');
@@ -506,7 +506,7 @@ $('fileIn').addEventListener('change',function(){
   var file=this.files&&this.files[0], g=picking; picking=null;
   if(!file||!g) return;
   setStatus('画像を準備しています…');
-  shrink(file, g.kind==='img'?1600:256).then(function(r){
+  shrink(file, (g.kind==='img'&&!g.icon)?1600:256).then(function(r){
     g.data=r.data; g.ext=r.ext;
     var el=elOf(g.id);
     if(el){
@@ -553,7 +553,7 @@ function renderMedia(){
   if(!list.length){ box.innerHTML='<p class="empty">このページには差しかえられる画像がありません。</p>'; return; }
   box.innerHTML=list.map(function(g){
     var th= g.data ? '<img src="'+g.data+'" alt="">' : g.kind==='img' ? '<img src="../'+esc(g.orig)+'" alt="">' : '<span class="emo">'+esc(g.orig)+'</span>';
-    return '<div class="media'+(g.data?' on':'')+'"><div class="th">'+th+'</div><div class="mb"><div class="mn">'+esc(g.kind==='img'?(g.alt||'画像'):'アイコン')+(where(g.id)?'<span style="color:var(--sub)">（'+where(g.id)+'）</span>':'')+(g.data?'<br><b style="color:var(--coral-d)">差しかえ予定</b>':'')+'</div>'+
+    return '<div class="media'+(g.data?' on':'')+'"><div class="th">'+th+'</div><div class="mb"><div class="mn">'+esc(g.kind==='img'&&!g.icon?(g.alt||'画像'):'アイコン')+(where(g.id)?'<span style="color:var(--sub)">（'+where(g.id)+'）</span>':'')+(g.data?'<br><b style="color:var(--coral-d)">差しかえ予定</b>':'')+'</div>'+
       '<div class="ops"><button class="link" data-pick="'+g.id+'">差しかえる</button><button class="link" data-go="'+g.id+'">場所を見る</button>'+(g.data?'<button class="link" data-back="'+g.id+'">元にもどす</button>':'')+'</div></div></div>';
   }).join('');
 }

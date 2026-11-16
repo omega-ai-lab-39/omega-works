@@ -588,3 +588,7 @@ a.mv-card .cap b::after{width:20px;height:20px;font-size:12px}
 /* ココナラの箱を上の3枚と同じ幅に */
 .coco-box{max-width:1040px}
 @media (max-width:900px){.coco-box{max-width:560px}}
+
+/* ChatGPTで作ったアイコン（絵文字のかわり）。大きさは文字と同じくらい */
+img.emo{display:inline-block;width:1.2em;height:1.2em;max-width:none;object-fit:contain;vertical-align:-.2em}
+.work .shot img.emo,.work:hover .shot img.emo{width:1.2em;height:1.2em;object-fit:contain;transform:none;border-radius:0;box-shadow:none}
