@@ -105,6 +105,9 @@ h2 .ja{font-size:13px;font-weight:500;color:var(--sub);letter-spacing:.18em;padd
 .work .shot.book{background:var(--accent-soft);display:flex;align-items:center;justify-content:center;padding:10px}
 .work .shot.book img{height:100%;width:auto;object-fit:contain}
 .work .shot.none{display:flex;align-items:center;justify-content:center;font-size:36px}
+.work .shot.movie{background:#1F2D4D url(../img/koyagi-chiisana.jpg) center/cover}
+.work .shot.movie video{width:100%;height:100%;display:block;object-fit:contain;background:#1F2D4D}
+@media print{.work .shot.movie video{display:none}}
 .work h3{margin:0 0 4px;font-size:17px;line-height:1.5}
 .work .meta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
 .tag{font-size:11.5px;border-radius:6px;padding:1px 8px;background:var(--navy-soft);color:var(--navy);font-weight:500}
@@ -246,6 +249,7 @@ h2 .ja{font-size:13px;font-weight:500;color:var(--sub);letter-spacing:.18em;padd
         <li>新人デザイナーの育成と、研修の内容づくり</li>
         <li>手順書・説明文を、相手に合わせたやさしい言葉で書く</li>
         <li>Amazon で絵本を2冊出版（Kindle版・ペーパーバック）</li>
+        <li>AIで切り絵風アニメを制作（台本から声・字幕・音楽まで）</li>
       </ul></div>
     </div>
   </div>
@@ -477,7 +481,7 @@ h2 .ja{font-size:13px;font-weight:500;color:var(--sub);letter-spacing:.18em;padd
       <button class="more-btn" type="button" data-more="あと5つ">もっと見る（あと5つ）</button>
     </div>
     <div class="wgroup">
-      <h3 class="wg-title"><span class="en-s">Books &amp; Games</span>本・ゲーム<small>2点</small></h3>
+      <h3 class="wg-title"><span class="en-s">Books, Videos &amp; Games</span>本・動画・ゲーム<small>3点</small></h3>
       <div class="works">
       <article class="work" data-c="book">
         <div class="shot book"><img src="img/book-hoikuen.jpg" alt="絵本『ほいくえん いきたくないな』の表紙" loading="lazy"></div>
@@ -488,6 +492,18 @@ h2 .ja{font-size:13px;font-weight:500;color:var(--sub);letter-spacing:.18em;padd
             <dt>作ったもの</dt><dd>AIで絵と文をつくり、Kindle版とペーパーバックで出版。表紙・中の組み方・販売ページまで一人で。</dd>
           </dl>
           <div class="links"><a href="https://www.amazon.co.jp/dp/B0HG6HN39T" target="_blank" rel="noopener">ほいくえん →</a><a href="https://www.amazon.co.jp/dp/B0HG4TR31B" target="_blank" rel="noopener">おとまり →</a></div>
+        </div>
+      </article>
+      <article class="work" data-c="book">
+        <div class="shot movie"><video controls playsinline preload="none" poster="../img/koyagi-chiisana.jpg" src="../video/koyagi-chiisana.mp4" aria-label="動画「いちばん ちいさな こやぎ」"></video></div>
+        <div>
+          <h3>動画「いちばん ちいさな こやぎ」ほか1本</h3>
+          <div class="meta"><span class="tag">動画制作</span><span class="tag">AI音声</span></div>
+          <dl>
+            <dt>作ったもの</dt><dd>『オオカミと七ひきの子ヤギ』をもとにした切り絵風アニメ2本。末っ子が「ぷろテイン」でムキムキになるオリジナル版（約3分）と、原作どおりの版（約5分）。</dd>
+            <dt>担当</dt><dd>台本・絵・声・字幕・効果音・音楽まで、AIを組み合わせて一人で制作。場面ごとの人数や大きさのずれも見直して仕上げた。</dd>
+          </dl>
+          <div class="links"><a href="../works.html#book" target="_blank" rel="noopener">2本とも見る →</a></div>
         </div>
       </article>
       <article class="work" data-c="book">
@@ -513,7 +529,7 @@ h2 .ja{font-size:13px;font-weight:500;color:var(--sub);letter-spacing:.18em;padd
     <div class="learn">
       <div><span class="en-s">School</span><h3>ユニコスクール<br>「AIエージェント開発コース」</h3><p>Claude Code の使い方から、アプリの公開までを受講。</p></div>
       <div><span class="en-s">Training</span><h3>Web制作会社の<br>社内研修</h3><p>ホームページの設計（お客さまの気持ちの順番に沿った組み立て）とデザインを学ぶ。</p></div>
-      <div><span class="en-s">Learning by making</span><h3>作って、使ってもらって<br>覚える</h3><p>15本以上のアプリと絵本2冊を、実際に使う人の声を聞きながら作ってきました。</p></div>
+      <div><span class="en-s">Learning by making</span><h3>作って、使ってもらって<br>覚える</h3><p>15本以上のアプリ、絵本2冊、動画2本を、実際に使う人の声を聞きながら作ってきました。</p></div>
     </div>
   </div>
 </section>
